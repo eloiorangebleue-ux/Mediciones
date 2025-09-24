@@ -17,106 +17,108 @@
       --danger: #f5576c;
       --background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family:'Poppins',sans-serif;
-      background:var(--background);
-      color:#333;
-      min-height:100vh;
+      font-family: 'Poppins', sans-serif;
+      background: var(--background);
+      color: #333;
+      min-height: 100vh;
     }
     .selector-container {
-      position:fixed; top:20px; right:20px;
-      background:var(--green-light); padding:12px 18px;
-      border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,0.1);
-      z-index:1001;
+      position: fixed; top: 20px; right: 20px;
+      background: var(--green-light); padding: 12px 18px;
+      border-radius: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      z-index: 1001;
     }
     .selector-container label {
-      font-weight:600; margin-right:8px;
-      color:var(--green-dark);
+      font-weight: 600; margin-right: 8px;
+      color: var(--green-dark);
     }
     .selector-container select {
-      font-family:'Poppins',sans-serif; font-size:0.95em;
-      border-radius:6px; padding:6px 12px;
-      border:2px solid var(--blue-light); background:#fff;
-      box-shadow:0 1px 4px rgba(0,0,0,0.1);
-      transition:border 0.2s, background 0.2s;
+      font-family: 'Poppins', sans-serif; font-size: 0.95em;
+      border-radius: 6px; padding: 6px 12px;
+      border: 2px solid var(--blue-light); background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      transition: border 0.2s, background 0.2s;
     }
     .selector-container select:focus {
-      border-color:var(--green); background:#f8fff9; outline:none;
+      border-color: var(--green); background: #f8fff9; outline: none;
     }
     .container {
-      max-width:1250px; margin:100px auto 40px auto;
-      background:#fff; border-radius:20px;
-      box-shadow:0 20px 48px rgba(0,0,0,0.07);
-      overflow:hidden; padding-bottom:30px;
-      animation:fadeIn 1s ease-out;
+      max-width: 1250px; margin: 100px auto 40px auto;
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.07);
+      overflow: hidden; padding-bottom: 30px;
+      animation: fadeIn 1s ease-out;
     }
     @keyframes fadeIn {
-      from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:none;}
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: none; }
     }
     .header {
-      background:var(--blue); color:white;
-      padding:30px 25px 20px 25px; display:flex;
-      align-items:center; justify-content:center; gap:20px;
+      background: var(--blue); color: white;
+      padding: 30px 25px 20px 25px;
+      display: flex; align-items: center; justify-content: center; gap: 20px;
     }
-    .header img { height:70px; width:auto; }
+    .header img { height: 70px; width: auto; }
     .header h1 {
-      font-size:2.2em; font-weight:700; letter-spacing:-1px;
+      font-size: 2.2em; font-weight: 700; letter-spacing: -1px;
     }
     .header p {
-      font-size:1.1em; opacity:0.9; margin-top:4px;
+      font-size: 1.1em; opacity: 0.9; margin-top: 4px;
     }
     .grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-      gap:36px; padding:40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px,1fr));
+      gap: 36px; padding: 40px;
     }
     .card {
-      background:#fff; border-radius:15px;
-      box-shadow:0 6px 24px rgba(0,0,0,0.05),0 1px 6px rgba(0,0,0,0.08);
-      padding:20px; display:flex; flex-direction:column;
-      align-items:center; transition:transform .2s,box-shadow .2s;
+      background: #fff; border-radius: 15px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.05),0 1px 6px rgba(0,0,0,0.08);
+      padding: 20px; display: flex; flex-direction: column; align-items: center;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
     .card:hover {
-      transform:translateY(-5px); box-shadow:0 12px 44px rgba(0,0,0,0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 44px rgba(0,0,0,0.15);
     }
     .card h3 {
-      font-size:1.2em; color:var(--green-dark);
-      margin-bottom:18px; font-weight:700; letter-spacing:0.5px;
+      font-size: 1.2em; color: var(--green-dark);
+      margin-bottom: 18px; font-weight: 700; letter-spacing: 0.5px;
     }
-    .chart-container { width:100%; min-height:225px; }
+    .chart-container { width: 100%; min-height: 225px; }
     .summary-report {
-      background:#f5f9f7; border-top:4px solid var(--green);
-      margin:40px 20px 20px; padding:30px 20px;
-      border-radius:0 0 20px 20px;
+      background: #f5f9f7; border-top: 4px solid var(--green);
+      margin: 40px 20px 20px; padding: 30px 20px;
+      border-radius: 0 0 20px 20px;
     }
     .summary-report h2 {
-      text-align:center; color:var(--green-dark);
+      text-align:center; color: var(--green-dark);
       margin-bottom:10px; font-size:1.8em;
     }
     .summary-dates {
       text-align:center; margin-bottom:20px;
-      color:var(--blue-dark); font-size:0.95em;
+      color: var(--blue-dark); font-size:0.95em;
     }
     .summary-cards {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 20px;
     }
     .summary-card {
-      background:white; border-radius:12px;
-      padding:15px; box-shadow:0 4px 16px rgba(0,0,0,0.05);
+      background: white; border-radius: 12px;
+      padding: 15px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);
       text-align:center;
     }
     .summary-card h4 {
-      font-size:1.1em; margin-bottom:10px; color:var(--blue-dark);
+      font-size:1.1em; margin-bottom:10px; color: var(--blue-dark);
     }
     .summary-card .value {
       font-size:1.5em; font-weight:700; margin-bottom:6px;
     }
     .summary-card .change { font-size:0.95em; }
-    .positive { color:var(--green-dark); }
-    .negative { color:var(--danger); }
+    .positive { color: var(--green-dark); }
+    .negative { color: var(--danger); }
     @media(max-width:900px){
       .container{margin:120px 10px 20px;}
       .grid{padding:20px;gap:26px;}
@@ -128,9 +130,9 @@
       .grid{display:block;padding:10px 2vw;}
       .card{margin-bottom:26px;}
     }
-    ::-webkit-scrollbar { width:6px; }
-    ::-webkit-scrollbar-track { background:var(--blue-light);border-radius:3px; }
-    ::-webkit-scrollbar-thumb { background:var(--green);border-radius:3px; }
+    ::-webkit-scrollbar{width:6px;}
+    ::-webkit-scrollbar-track{background:var(--blue-light);border-radius:3px;}
+    ::-webkit-scrollbar-thumb{background:var(--green);border-radius:3px;}
   </style>
 </head>
 <body>
@@ -157,39 +159,51 @@
   </div>
   <script>
     const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
-    let charts={}, fechasGlobal=[];
+    let charts = {}, fechasGlobal = [];
 
     function drawChart(id,data,color){
       const ctx=document.getElementById(id).getContext('2d');
       if(charts[id]){
-        charts[id].data.labels=fechasGlobal; charts[id].data.datasets[0].data=data; charts[id].update();
+        charts[id].data.labels=fechasGlobal;
+        charts[id].data.datasets[0].data=data;
+        charts[id].update();
       } else {
-        charts[id]=new Chart(ctx,{
+        charts[id] = new Chart(ctx, {
           type:'line',
-          data:{labels:fechasGlobal,datasets:[{data,borderColor:color,backgroundColor:color+'33',fill:true,tension:0.4,pointRadius:4}]},
-          options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:'#eee'}}},plugins:{legend:{display:false}}}
+          data:{ labels:fechasGlobal, datasets:[{ data, borderColor:color, backgroundColor:color+'33', fill:true, tension:0.4, pointRadius:4 }]},
+          options:{ responsive:true, maintainAspectRatio:false,
+            scales:{ x:{ grid:{ display:false } }, y:{ beginAtZero:false, grid:{ color:'#eee' } } },
+            plugins:{ legend:{ display:false } }
+          }
         });
       }
     }
 
     function renderizarGraficos(datos){
       datos.sort((a,b)=>new Date(a.Fecha)-new Date(b.Fecha));
-      fechasGlobal=datos.map(r=>new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
+      fechasGlobal = datos.map(r=>new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
       const m=f=>datos.map(r=>parseFloat(r[f])||0);
-      const keys=[['Peso corporal Kg','#28a745'],['BMI (Índice Masa Corporal)','#17a2b8'],['% Grasa corporal','#f5576c'],['% Agua total del cuerpo','#28a745'],['Masa muscular Kg','#17a2b8'],['BMR (Tasa Metabólica Basal)','#28a745'],['Edad metabólica','#17a2b8'],['Nivel de grasa visceral','#f5576c']];
-      const grid=document.getElementById('chartsGrid');
-      grid.innerHTML=keys.map((k,i)=>`
-        <div class="card">
-          <h3>${k[0].split(' ')[0]}</h3>
-          <div class="chart-container"><canvas id="chart${i}"></canvas></div>
-        </div>`).join('');
-      keys.forEach((k,i)=>drawChart(`chart${i}`,m(k[0]),k[1]));
+      const keys=[
+        ['Peso corporal Kg','#28a745'],
+        ['BMI (Índice Masa Corporal)','#17a2b8'],
+        ['% Grasa corporal','#f5576c'],
+        ['% Agua total del cuerpo','#28a745'],
+        ['Masa muscular Kg','#17a2b8'],
+        ['BMR (Tasa Metabólica Basal)','#28a745'],
+        ['Edad metabólica','#17a2b8'],
+        ['Nivel de grasa visceral','#f5576c']
+      ];
+      const grid = document.getElementById('chartsGrid');
+      grid.innerHTML = keys.map((k,i)=>
+        `<div class="card"><h3>${k[0].split(' ')[0]}</h3><div class="chart-container"><canvas id="chart${i}"></canvas></div></div>`
+      ).join('');
+      keys.forEach((k,i)=> drawChart(`chart${i}`, m(k[0]), k[1]) );
     }
 
     function generarResumen(datos){
-      if(datos.length<2)return;
-      const first=datos[0], last=datos[datos.length-1];
-      document.getElementById('summaryDates').textContent=
+      if(datos.length<2) return;
+      const first = datos[0], last = datos[datos.length-1];
+      document.getElementById('summaryDates').textContent =
         `De ${new Date(first.Fecha).toLocaleDateString()} a ${new Date(last.Fecha).toLocaleDateString()}`;
       const metrics=[
         {key:'Peso corporal Kg',label:'Peso (Kg)'},
@@ -200,17 +214,20 @@
         {key:'Edad metabólica',label:'Edad Metabólica'},
         {key:'Nivel de grasa visceral',label:'Grasa Visceral'}
       ];
-      const container=document.getElementById('summaryCards');
-      container.innerHTML='';
+      const container = document.getElementById('summaryCards');
+      container.innerHTML = '';
       metrics.forEach(m=>{
-        const a=parseFloat(first[m.key]), b=parseFloat(last[m.key]); if(isNaN(a)||isNaN(b))return;
+        const a=parseFloat(first[m.key]), b=parseFloat(last[m.key]);
+        if(isNaN(a)||isNaN(b)) return;
         const diff=(b-a).toFixed(1), sign=diff>=0?'+':'';
-        const improved=['% Grasa','Peso','Visceral'].some(t=>m.label.includes(t))?diff<0:diff>0;
-        const card=document.createElement('div'); card.className='summary-card';
+        const improved = ['% Grasa','Peso','Visceral'].some(t=>m.label.includes(t))? diff<0 : diff>0;
+        const card = document.createElement('div');
+        card.className='summary-card';
         card.innerHTML=`
           <h4>${m.label}</h4>
           <div class="value">${sign}${diff}</div>
-          <div class="change ${improved?'positive':'negative'}">${improved?'Mejora':'Empeoró'}</div>`;
+          <div class="change ${improved?'positive':'negative'}">${improved?'Mejora':'Empeoró'}</div>
+        `;
         container.appendChild(card);
       });
       renderMetabolicReport(datos);
@@ -219,46 +236,56 @@
     function evaluarMetabolismo(last){
       const bio=[];
       const bmi=parseFloat(last['BMI (Índice Masa Corporal)']);
-      let bmiCat=bmi<18.5?'Bajo peso':bmi<25?'Normal':bmi<30?'Sobrepeso':'Obesidad';
+      let bmiCat = bmi<18.5?'Bajo peso': bmi<25?'Normal': bmi<30?'Sobrepeso':'Obesidad';
       bio.push({label:`BMI: ${bmi.toFixed(1)}`,status:bmiCat});
       const fat=parseFloat(last['% Grasa corporal']);
-      let fatStatus=fat<12?'Bajo':fat<=25?'Saludable':'Alto';
+      let fatStatus = fat<12?'Bajo': fat<=25?'Saludable':'Alto';
       bio.push({label:`Grasa corporal: ${fat.toFixed(1)}%`,status:fatStatus});
       const vis=parseFloat(last['Nivel de grasa visceral']);
-      let visStatus=vis<=9?'Saludable':vis<=14?'Moderado':'Alto';
+      let visStatus = vis<=9?'Saludable': vis<=14?'Moderado':'Alto';
       bio.push({label:`Grasa visceral: ${vis}`,status:visStatus});
       return bio;
     }
 
     function renderMetabolicReport(datos){
-      const last=datos[datos.length-1];
-      const bio=evaluarMetabolismo(last);
-      const container=document.getElementById('summaryCards');
-      const title=document.createElement('h3');
+      const last = datos[datos.length-1];
+      const bio = evaluarMetabolismo(last);
+      const container = document.getElementById('summaryCards');
+      const title = document.createElement('h3');
       title.textContent='🧪 Evaluación Metabólica';
       title.style.gridColumn='1/-1'; title.style.textAlign='center'; title.style.margin='20px 0 10px';
       container.prepend(title);
       bio.forEach(item=>{
-        const card=document.createElement('div'); card.className='summary-card';
+        const card = document.createElement('div');
+        card.className='summary-card';
         card.innerHTML=`
           <h4>${item.label}</h4>
-          <div class="change ${['Normal','Saludable','Saludable'].includes(item.status)?'positive':'negative'}">${item.status}</div>`;
+          <div class="change ${['Normal','Saludable'].includes(item.status)?'positive':'negative'}">${item.status}</div>
+        `;
         container.appendChild(card);
       });
     }
 
     async function init(){
-      const allData=await fetch(SHEET_URL).then(r=>r.json());
-      const sel=document.getElementById('clienteSelect');
-      const names=[...new Set(allData.map(r=>(r.Nombre+' '+r.Apellidos).trim()))];
+      const allData = await fetch(SHEET_URL).then(r=>r.json());
+      const sel = document.getElementById('clienteSelect');
+      const names = [...new Set(allData.map(r=>(r.Nombre+' '+r.Apellidos).trim()))];
       sel.innerHTML='<option value="">—Selecciona cliente—</option>';
-      names.forEach(n=> sel.appendChild(Object.assign(document.createElement('option'),{value:n,textContent:n})));
-      sel.addEventListener('change',()=>{
-        const [nom,...ap]=sel.value.split(' '), apellido=ap.join(' ');
-        const url=sel.value?`${SHEET_URL}?nombre=${encodeURIComponent(nom)}&apellido=${encodeURIComponent(apellido)}`:SHEET_URL;
-        fetch(url).then(r=>r.json()).then(data=>{renderizarGraficos(data); generarResumen(data);});
+      names.forEach(n=>{
+        const o=document.createElement('option');
+        o.value=n; o.textContent=n;
+        sel.appendChild(o);
       });
-      renderizarGraficos(allData); generarResumen(allData);
+      sel.addEventListener('change',()=>{
+        const [nom,...ap] = sel.value.split(' ');
+        const apellido = ap.join(' ');
+        const url = sel.value
+          ? `${SHEET_URL}?nombre=${encodeURIComponent(nom)}&apellido=${encodeURIComponent(apellido)}`
+          : SHEET_URL;
+        fetch(url).then(r=>r.json()).then(data=>{ renderizarGraficos(data); generarResumen(data); });
+      });
+      renderizarGraficos(allData);
+      generarResumen(allData);
     }
 
     init();
