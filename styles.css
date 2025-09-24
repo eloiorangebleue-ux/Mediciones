@@ -2,7 +2,6 @@
   --bg: #f4f7fa;
   --card: #ffffff;
   --primary: #4a90e2;
-  --primary-dark: #3b75b1;
   --accent: #50e3c2;
   --warn: #e94e77;
   --text: #34495e;
@@ -35,25 +34,9 @@ h1 {
   font-weight: 600;
 }
 
-.filters {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-.filters select,
-.filters input[type="date"] {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #fff;
-  font-size: 0.95em;
-}
-
 .summary-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -96,18 +79,18 @@ h1 {
   height: 300px !important;
 }
 
-details {
+.comparison {
   background: var(--card);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 10px 20px;
+  padding: 20px;
   margin-bottom: 40px;
 }
 
-summary {
-  font-weight: 600;
-  cursor: pointer;
-  padding: 10px 0;
+.comparison h2 {
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--primary);
 }
 
 table {
@@ -116,9 +99,8 @@ table {
   margin-top: 10px;
 }
 
-th,
-td {
-  padding: 8px;
+th, td {
+  padding: 12px 8px;
   border-bottom: 1px solid #eee;
   text-align: center;
   font-size: 0.9em;
@@ -127,6 +109,7 @@ td {
 th {
   background: var(--primary);
   color: #fff;
+  font-weight: 500;
 }
 
 tr:last-child td {
@@ -144,9 +127,6 @@ tr:last-child td {
 }
 
 @media (max-width: 600px) {
-  .filters {
-    flex-direction: column;
-  }
   .summary-cards {
     grid-template-columns: 1fr;
   }
