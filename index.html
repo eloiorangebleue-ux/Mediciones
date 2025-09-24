@@ -11,7 +11,6 @@
       --bg: #f4f7fa;
       --card: #ffffff;
       --primary: #4a90e2;
-      --primary-dark: #3b75b1;
       --accent: #50e3c2;
       --warn: #e94e77;
       --text: #34495e;
@@ -34,18 +33,6 @@
       text-align:center;
       margin-bottom:20px;
       font-weight:600;
-    }
-    .filters {
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      margin-bottom:30px;
-    }
-    .filters select,
-    .filters input[type="date"] {
-      padding:8px 12px; border:1px solid #ccc;
-      border-radius:6px; background:#fff;
-      font-size:.95em;
     }
     .summary-cards {
       display:grid;
@@ -79,14 +66,14 @@
     .chart-wrapper canvas {
       width:100% !important; height:300px !important;
     }
-    details {
+    .comparison {
       background:var(--card);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:10px 20px; margin-bottom:40px;
+      padding:20px; margin-bottom:40px;
     }
-    summary {
-      font-weight:600; cursor:pointer; padding:10px 0;
+    .comparison h2 {
+      margin-bottom:16px; text-align:center; color:var(--primary);
     }
     table {
       width:100%; border-collapse:collapse; margin-top:10px;
@@ -101,73 +88,72 @@
     tr:last-child td {
       border-bottom:none;
     }
-    .positive {
-      color:var(--accent); font-weight:600;
-    }
-    .negative {
-      color:var(--warn); font-weight:600;
-    }
+    .positive { color:var(--accent); font-weight:600; }
+    .negative { color:var(--warn); font-weight:600; }
     @media(max-width:600px){
-      .filters { flex-direction:column; }
       .summary-cards { grid-template-columns:1fr; }
-      .chart-wrapper canvas { height:220px !important; }
+      .chart-wrapper canvas { height:220px!important; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>📊 Dashboard Salud</h1>
-    <div class="filters">
-      <select id="clienteSelect"><option value="">Cliente...</option></select>
-      <input type="date" id="fromDate"/>
-      <input type="date" id="toDate"/>
-    </div>
+
     <div class="summary-cards">
       <div class="card">
         <h2 id="card-weight">—</h2>
         <p>Kg</p>
-        <small>Peso</small>
+        <small>Peso actual</small>
       </div>
       <div class="card">
         <h2 id="card-bmi">—</h2>
         <p>—</p>
-        <small>BMI</small>
+        <small>BMI actual</small>
       </div>
       <div class="card">
         <h2 id="card-fat">—</h2>
         <p>%</p>
-        <small>Grasa %</small>
+        <small>Grasa corporal actual</small>
       </div>
       <div class="card">
         <h2 id="card-visceral">—</h2>
         <p>—</p>
-        <small>Visceral</small>
+        <small>Grasa visceral actual</small>
       </div>
     </div>
+
     <div class="chart-wrapper">
       <canvas id="evolChart"></canvas>
     </div>
-    <details>
-      <summary>Ver datos crudos</summary>
-      <table id="dataTable">
-        <thead><tr><th>Fecha</th><th>Métrica</th><th>Valor</th></tr></thead>
-        <tbody></tbody>
+
+    <div class="comparison">
+      <h2>🔍 Comparativa y Análisis</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Métrica</th>
+            <th>Primera<br>Medición</th>
+            <th>Última<br>Medición</th>
+            <th>Δ</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="comparisonBody"></tbody>
       </table>
-    </details>
+    </div>
   </div>
 
   <script>
     const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
-    let rawData = [];
+    let dataAll = [];
 
-    async function fetchData(params = '') {
-      const res = await fetch(SHEET_URL + params);
+    async function fetchData() {
+      const res = await fetch(SHEET_URL);
       return res.json();
     }
 
-    function updateSummary(data) {
-      if (!data.length) return;
-      const last = data[data.length - 1];
+    function updateSummary(last) {
       document.getElementById('card-weight').textContent = parseFloat(last['Peso corporal Kg']).toFixed(1);
       document.getElementById('card-bmi').textContent    = parseFloat(last['BMI (Índice Masa Corporal)']).toFixed(1);
       document.getElementById('card-fat').textContent    = parseFloat(last['% Grasa corporal']).toFixed(1);
@@ -177,7 +163,7 @@
     function renderChart(data) {
       const ctx = document.getElementById('evolChart').getContext('2d');
       const labels = data.map(r => new Date(r.Fecha).toLocaleDateString());
-      const weight = data.map(r => parseFloat(r['Peso corporal Kg']) || 0);
+      const weight = data.map(r => parseFloat(r['Peso corporal Kg'])||0);
       if (window.eChart) window.eChart.destroy();
       window.eChart = new Chart(ctx, {
         type: 'line',
@@ -187,7 +173,7 @@
             label: 'Peso (Kg)',
             data: weight,
             borderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary'),
-            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary') + '33',
+            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary')+'33',
             fill: true,
             tension: 0.3,
             pointRadius: 3
@@ -197,52 +183,38 @@
       });
     }
 
-    function renderTable(data) {
-      const tbody = document.querySelector('#dataTable tbody');
+    function renderComparison(data) {
+      const first = data[0], last = data[data.length-1];
+      const metrics = [
+        { key:'Peso corporal Kg', label:'Peso (Kg)', classify: v => v<first['Peso corporal Kg'] ? 'Disminuyó' : 'Aumentó' },
+        { key:'BMI (Índice Masa Corporal)', label:'BMI', classify: v => v < first['BMI (Índice Masa Corporal)'] ? 'Mejora' : 'Empeoró' },
+        { key:'% Grasa corporal', label:'% Grasa', classify: v => v < first['% Grasa corporal'] ? 'Mejora' : 'Empeoró' },
+        { key:'Nivel de grasa visceral', label:'Grasa visceral', classify: v => v < first['Nivel de grasa visceral'] ? 'Mejora' : 'Empeoró' }
+      ];
+      const tbody = document.getElementById('comparisonBody');
       tbody.innerHTML = '';
-      data.forEach(r => {
-        Object.entries(r).forEach(([k, v]) => {
-          if (k === 'Fecha') return;
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${new Date(r.Fecha).toLocaleDateString()}</td><td>${k}</td><td>${v}</td>`;
-          tbody.appendChild(tr);
-        });
+      metrics.forEach(m => {
+        const a = parseFloat(first[m.key]), b = parseFloat(last[m.key]);
+        const diff = (b - a).toFixed(1), sign = diff>=0?'+':'';
+        const status = m.classify(b);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${m.label}</td>
+          <td>${a.toFixed(1)}</td>
+          <td>${b.toFixed(1)}</td>
+          <td>${sign}${diff}</td>
+          <td class="${status==='Mejora'?'positive':'negative'}">${status}</td>
+        `;
+        tbody.appendChild(tr);
       });
-    }
-
-    async function applyFilter() {
-      const sel = document.getElementById('clienteSelect');
-      let params = '';
-      if (sel.value) {
-        const [n, a] = sel.value.split('|');
-        params = `?nombre=${encodeURIComponent(n)}&apellido=${encodeURIComponent(a)}`;
-      }
-      const from = document.getElementById('fromDate').value;
-      const to   = document.getElementById('toDate').value;
-      if (from) params += (params ? '&' : '?') + `from=${from}`;
-      if (to)   params += (params ? '&' : '?') + `to=${to}`;
-      const data = await fetchData(params);
-      rawData = data;
-      updateSummary(data);
-      renderChart(data);
-      renderTable(data);
     }
 
     async function init() {
-      rawData = await fetchData();
-      const sel = document.getElementById('clienteSelect');
-      const clients = [...new Set(rawData.map(r => r.Nombre + '|' + r.Apellidos))];
-      clients.forEach(c => {
-        const [n, a] = c.split('|');
-        const opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = `${n} ${a}`;
-        sel.appendChild(opt);
-      });
-      sel.addEventListener('change', applyFilter);
-      document.getElementById('fromDate').addEventListener('change', applyFilter);
-      document.getElementById('toDate').addEventListener('change', applyFilter);
-      applyFilter();
+      dataAll = await fetchData();
+      if (!dataAll.length) return;
+      updateSummary(dataAll[dataAll.length-1]);
+      renderChart(dataAll);
+      renderComparison(dataAll);
     }
 
     init();
