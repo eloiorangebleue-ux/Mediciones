@@ -4,39 +4,74 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Evolución Biomédica</title>
+  <!-- Fuente Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --orange: #ff6b35;
-      --primary: #667eea;
-      --accent: #f093fb;
-      --skin: #f9fafc;
-      --background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+      --green-light: #d4edda;
+      --green: #28a745;
+      --green-dark: #1e7e34;
+      --blue-light: #d1ecf1;
+      --blue: #17a2b8;
+      --blue-dark: #117a8b;
+      --danger: #f5576c;
+      --background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
     }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
-      background: var(--skin);
-      margin: 0;
+      background: var(--background);
+      color: #333;
       min-height: 100vh;
-      background-image: var(--background);
+    }
+    .selector-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--green-light);
+      padding: 12px 18px;
+      border-radius: 10px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      z-index: 1001;
+    }
+    .selector-container label {
+      font-weight: 600;
+      margin-right: 8px;
+      color: var(--green-dark);
+    }
+    .selector-container select {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95em;
+      border-radius: 6px;
+      padding: 6px 12px;
+      border: 2px solid var(--blue-light);
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      transition: border 0.2s, background 0.2s;
+    }
+    .selector-container select:focus {
+      border-color: var(--green);
+      background: #f8fff9;
+      outline: none;
     }
     .container {
       max-width: 1250px;
-      margin: 80px auto 40px auto; /* espacio superior para el selector fijo */
+      margin: 100px auto 40px auto;
       background: #fff;
-      border-radius: 30px;
-      box-shadow: 0 20px 48px rgba(120,30,120,0.07), 0 4px 16px rgba(60,60,150,0.05);
+      border-radius: 20px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.07);
       overflow: hidden;
       padding-bottom: 30px;
-      animation: fadeIn 1.2s;
+      animation: fadeIn 1s ease-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(40px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: none; }
     }
     .header {
-      background: linear-gradient(90deg, var(--orange), var(--primary) 80%);
+      background: var(--blue);
       color: white;
       padding: 50px 25px 30px 25px;
       text-align: center;
@@ -45,42 +80,11 @@
       font-size: 2.5em;
       font-weight: 700;
       margin-bottom: 8px;
-      letter-spacing: -2px;
+      letter-spacing: -1px;
     }
     .header p {
       font-size: 1.2em;
-      margin: 0;
-      opacity: 0.92;
-    }
-    .selector-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #fff;
-      padding: 10px 15px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      z-index: 1000;
-    }
-    .selector-container label {
-      font-weight: 600;
-      margin-right: 8px;
-      color: var(--primary);
-    }
-    .selector-container select {
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95em;
-      border-radius: 6px;
-      padding: 6px 12px;
-      border: 2px solid #e1e7ef;
-      background: #f5f7fa;
-      color: #333;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      transition: border .2s;
-    }
-    .selector-container select:focus {
-      border-color: var(--orange);
-      outline: none;
+      opacity: 0.9;
     }
     .grid {
       display: grid;
@@ -89,40 +93,105 @@
       padding: 40px;
     }
     .card {
-      background: linear-gradient(140deg, #f8faff 70%, #ffeedd 100%);
-      border-radius: 20px;
-      box-shadow: 0 6px 32px rgba(204,218,238,0.1), 0 1.5px 7px rgba(255,196,207,0.2);
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.05), 0 1px 6px rgba(0,0,0,0.08);
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: transform .2s, box-shadow .2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 12px 44px rgba(0,0,0,0.15);
     }
     .card h3 {
-      font-size: 1.18em;
-      color: var(--orange);
+      font-size: 1.2em;
+      color: var(--green-dark);
       margin-bottom: 18px;
       font-weight: 700;
-      letter-spacing: .5px;
+      letter-spacing: 0.5px;
     }
     .chart-container {
       width: 100%;
       min-height: 225px;
     }
+    .summary-report {
+      background: #f5f9f7;
+      border-top: 4px solid var(--green);
+      margin: 40px 20px 20px 20px;
+      padding: 30px 20px;
+      border-radius: 0 0 20px 20px;
+    }
+    .summary-report h2 {
+      text-align: center;
+      color: var(--green-dark);
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .summary-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .summary-card h4 {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      color: var(--blue-dark);
+    }
+    .summary-card .value {
+      font-size: 1.5em;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .summary-card .change {
+      font-size: 0.95em;
+    }
+    .positive { color: var(--green-dark); }
+    .negative { color: var(--danger); }
     @media (max-width: 900px) {
-      .container { margin: 100px 10px 20px 10px; }
+      .container { margin: 120px 10px 20px 10px; }
       .grid { padding: 20px; gap: 26px; }
     }
     @media (max-width: 600px) {
-      .selector-container { position: static; margin: 10px auto; }
-      .header { padding: 30px 6vw 20px 6vw; }
-      .header h1 { font-size: 1.6em; }
-      .grid { display: block; padding: 10px 2vw; }
-      .card { margin-bottom: 26px; }
+      .selector-container {
+        position: static;
+        margin: 10px auto;
+        text-align: center;
+      }
+      .header {
+        padding: 30px 6vw 20px 6vw;
+      }
+      .header h1 {
+        font-size: 1.8em;
+      }
+      .grid {
+        display: block;
+        padding: 10px 2vw;
+      }
+      .card {
+        margin-bottom: 26px;
+      }
+    }
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--blue-light);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--green);
+      border-radius: 3px;
     }
   </style>
 </head>
@@ -148,62 +217,86 @@
       <div class="card"><h3>Edad metabólica</h3><div class="chart-container"><canvas id="edadMetabolicaChart"></canvas></div></div>
       <div class="card"><h3>Grasa visceral</h3><div class="chart-container"><canvas id="grasaVisceralChart"></canvas></div></div>
     </div>
+    <div class="summary-report" id="summaryReport">
+      <h2>📋 Resumen de Progreso</h2>
+      <div class="summary-cards" id="summaryCards"></div>
+    </div>
   </div>
   <script>
     const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
     let charts = {}, fechasGlobal = [];
-    
-    function drawChart(id, data, color) {
-      const ctx = document.getElementById(id).getContext('2d');
-      if (charts[id]) {
-        charts[id].data.labels = fechasGlobal;
-        charts[id].data.datasets[0].data = data;
-        charts[id].update();
+    function drawChart(id,data,color){
+      const ctx=document.getElementById(id).getContext('2d');
+      if(charts[id]){
+        charts[id].data.labels=fechasGlobal; charts[id].data.datasets[0].data=data; charts[id].update();
       } else {
-        charts[id] = new Chart(ctx, {
-          type: 'line',
-          data: { labels: fechasGlobal, datasets: [{ data, borderColor: color, backgroundColor: color + '33', fill:true, tension:0.4, pointRadius:4 }] },
-          options: { responsive:true, maintainAspectRatio:false, scales:{ x:{grid:{display:false}}, y:{beginAtZero:false,grid:{color:'#eee'}} }, plugins:{legend:{display:false}} }
+        charts[id]=new Chart(ctx,{
+          type:'line',
+          data:{labels:fechasGlobal,datasets:[{data,borderColor:color,backgroundColor:color+'33',fill:true,tension:0.4,pointRadius:4}]},
+          options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:'#eee'}}},plugins:{legend:{display:false}}}
         });
       }
     }
-    
-    function renderizarGraficos(datos) {
+    function renderizarGraficos(datos){
       datos.sort((a,b)=>new Date(a.Fecha)-new Date(b.Fecha));
-      fechasGlobal = datos.map(r=> new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
-      const m = f=>datos.map(r=>parseFloat(r[f])||0);
-      drawChart('pesoChart', m('Peso corporal Kg'), '#ff6b35');
-      drawChart('bmiChart', m('BMI (Índice Masa Corporal)'), '#667eea');
-      drawChart('grasaChart', m('% Grasa corporal'), '#f5576c');
-      drawChart('aguaChart', m('% Agua total del cuerpo'), '#4facfe');
-      drawChart('musculoChart', m('Masa muscular Kg'), '#4ade80');
-      drawChart('bmrChart', m('BMR (Tasa Metabólica Basal)'), '#764ba2');
-      drawChart('edadMetabolicaChart', m('Edad metabólica'), '#f093fb');
-      drawChart('grasaVisceralChart', m('Nivel de grasa visceral'), '#ff8e53');
+      fechasGlobal=datos.map(r=>new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
+      const m=f=>datos.map(r=>parseFloat(r[f])||0);
+      drawChart('pesoChart',m('Peso corporal Kg'),'#28a745');
+      drawChart('bmiChart',m('BMI (Índice Masa Corporal)'),'#17a2b8');
+      drawChart('grasaChart',m('% Grasa corporal'),'#f5576c');
+      drawChart('aguaChart',m('% Agua total del cuerpo'),'#28a745');
+      drawChart('musculoChart',m('Masa muscular Kg'),'#17a2b8');
+      drawChart('bmrChart',m('BMR (Tasa Metabólica Basal)'),'#28a745');
+      drawChart('edadMetabolicaChart',m('Edad metabólica'),'#17a2b8');
+      drawChart('grasaVisceralChart',m('Nivel de grasa visceral'),'#f5576c');
     }
-    
-    async function init() {
-      const allData = await fetch(SHEET_URL).then(r=>r.json());
-      console.log(allData);
-      const nombres = [...new Set(allData.map(r=> (r.Nombre+' '+r.Apellidos).trim() ))];
-      const sel = document.getElementById('clienteSelect');
-      sel.innerHTML = '<option value="">—Selecciona cliente—</option>';
-      nombres.forEach(n=>{
-        const o = document.createElement('option');
-        o.value = n;
-        o.textContent = n;
-        sel.appendChild(o);
+    function generarResumen(datos){
+      if(datos.length<2)return;
+      const first=datos[0], last=datos[datos.length-1];
+      const metrics=[
+        {key:'Peso corporal Kg',label:'Peso (Kg)'},
+        {key:'BMI (Índice Masa Corporal)',label:'BMI'},
+        {key:'% Grasa corporal',label:'% Grasa'},
+        {key:'Masa muscular Kg',label:'Masa Muscular'},
+        {key:'BMR (Tasa Metabólica Basal)',label:'BMR'},
+        {key:'Edad metabólica',label:'Edad Metabólica'},
+        {key:'Nivel de grasa visceral',label:'Grasa Visceral'}
+      ];
+      const container=document.getElementById('summaryCards');
+      container.innerHTML='';
+      metrics.forEach(m=>{
+        const a=parseFloat(first[m.key]), b=parseFloat(last[m.key]);
+        if(isNaN(a)||isNaN(b))return;
+        const diff=(b-a).toFixed(1), sign=diff>=0?'+':'';
+        const improved=['% Grasa','Peso','Visceral'].some(t=>m.label.includes(t))?diff<0:diff>0;
+        const card=document.createElement('div');
+        card.className='summary-card';
+        card.innerHTML=`
+          <h4>${m.label}</h4>
+          <div class="value">${sign}${diff}</div>
+          <div class="change ${improved?'positive':'negative'}">${improved?'Mejora':'Empeoró'}</div>
+        `;
+        container.appendChild(card);
       });
-      sel.addEventListener('change', ()=>{
-        const [nombre, ...ap] = sel.value.split(' ');
-        const apellido = ap.join(' ');
-        const urlParam = `?nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}`;
-        const url = sel.value ? SHEET_URL + urlParam : SHEET_URL;
-        fetch(url).then(r=>r.json()).then(renderizarGraficos);
+    }
+    async function init(){
+      const allData=await fetch(SHEET_URL).then(r=>r.json());
+      const sel=document.getElementById('clienteSelect');
+      const nombres=[...new Set(allData.map(r=>(r.Nombre+' '+r.Apellidos).trim()))];
+      sel.innerHTML='<option value="">—Selecciona cliente—</option>';
+      nombres.forEach(n=>{
+        const o=document.createElement('option');
+        o.value=n; o.textContent=n; sel.appendChild(o);
+      });
+      sel.addEventListener('change',()=>{
+        const [nombre, ...ap]=sel.value.split(' ');
+        const apellido=ap.join(' ');
+        const url=sel.value?`${SHEET_URL}?nombre=${encodeURIComponent(nombre)}&apellido=${encodeURIComponent(apellido)}`:SHEET_URL;
+        fetch(url).then(r=>r.json()).then(data=>{renderizarGraficos(data);generarResumen(data);});
       });
       renderizarGraficos(allData);
+      generarResumen(allData);
     }
-    
     init();
   </script>
 </body>
