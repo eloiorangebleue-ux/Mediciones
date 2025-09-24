@@ -157,17 +157,17 @@
   </div>
 
   <script>
-    const SHEET_URL = 'https://script.google.com/macros/s/.../exec';
-    let rawData=[];
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
+    let rawData = [];
 
-    async function fetchData(params='') {
-      const res=await fetch(SHEET_URL+params);
+    async function fetchData(params = '') {
+      const res = await fetch(SHEET_URL + params);
       return res.json();
     }
 
     function updateSummary(data) {
-      if(!data.length) return;
-      const last=data[data.length-1];
+      if (!data.length) return;
+      const last = data[data.length - 1];
       document.getElementById('card-weight').textContent = parseFloat(last['Peso corporal Kg']).toFixed(1);
       document.getElementById('card-bmi').textContent    = parseFloat(last['BMI (Índice Masa Corporal)']).toFixed(1);
       document.getElementById('card-fat').textContent    = parseFloat(last['% Grasa corporal']).toFixed(1);
@@ -175,61 +175,73 @@
     }
 
     function renderChart(data) {
-      const ctx=document.getElementById('evolChart').getContext('2d');
-      const labels=data.map(r=>new Date(r.Fecha).toLocaleDateString());
-      const weight=data.map(r=>parseFloat(r['Peso corporal Kg'])||0);
-      if(window.eChart) window.eChart.destroy();
-      window.eChart=new Chart(ctx,{
-        type:'line',
-        data:{labels,datasets:[{label:'Peso (Kg)',data:weight,borderColor:getComputedStyle(document.documentElement).getPropertyValue('--primary'),backgroundColor:getComputedStyle(document.documentElement).getPropertyValue('--primary')+'33',fill:true,tension:0.3}]},
-        options:{responsive:true}
+      const ctx = document.getElementById('evolChart').getContext('2d');
+      const labels = data.map(r => new Date(r.Fecha).toLocaleDateString());
+      const weight = data.map(r => parseFloat(r['Peso corporal Kg']) || 0);
+      if (window.eChart) window.eChart.destroy();
+      window.eChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Peso (Kg)',
+            data: weight,
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary'),
+            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary') + '33',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 3
+          }]
+        },
+        options: { responsive: true }
       });
     }
 
     function renderTable(data) {
-      const tbody=document.querySelector('#dataTable tbody');
-      tbody.innerHTML='';
-      data.forEach(r=>{
-        Object.entries(r).forEach(([k,v])=>{
-          if(k==='Fecha') return;
-          const tr=document.createElement('tr');
-          tr.innerHTML=`<td>${new Date(r.Fecha).toLocaleDateString()}</td><td>${k}</td><td>${v}</td>`;
+      const tbody = document.querySelector('#dataTable tbody');
+      tbody.innerHTML = '';
+      data.forEach(r => {
+        Object.entries(r).forEach(([k, v]) => {
+          if (k === 'Fecha') return;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${new Date(r.Fecha).toLocaleDateString()}</td><td>${k}</td><td>${v}</td>`;
           tbody.appendChild(tr);
         });
       });
     }
 
     async function applyFilter() {
-      const sel=document.getElementById('clienteSelect');
-      let params='';
-      if(sel.value) {
-        const [n, a]=sel.value.split('|');
-        params=`?nombre=${encodeURIComponent(n)}&apellido=${encodeURIComponent(a)}`;
+      const sel = document.getElementById('clienteSelect');
+      let params = '';
+      if (sel.value) {
+        const [n, a] = sel.value.split('|');
+        params = `?nombre=${encodeURIComponent(n)}&apellido=${encodeURIComponent(a)}`;
       }
-      const from=document.getElementById('fromDate').value;
-      const to=document.getElementById('toDate').value;
-      if(from) params+= (params?'&':'?')+`from=${from}`;
-      if(to)   params+= (params?'&':'?')+`to=${to}`;
-      const data=await fetchData(params);
-      rawData=data;
+      const from = document.getElementById('fromDate').value;
+      const to   = document.getElementById('toDate').value;
+      if (from) params += (params ? '&' : '?') + `from=${from}`;
+      if (to)   params += (params ? '&' : '?') + `to=${to}`;
+      const data = await fetchData(params);
+      rawData = data;
       updateSummary(data);
       renderChart(data);
       renderTable(data);
     }
 
-    async function init(){
-      rawData=await fetchData();
-      const sel=document.getElementById('clienteSelect');
-      const clients=[...new Set(rawData.map(r=>r.Nombre+'|'+r.Apellidos))];
-      clients.forEach(c=>{
-        const [n,a]=c.split('|');
-        const o=document.createElement('option');
-        o.value=c; o.textContent=`${n} ${a}`;
-        sel.appendChild(o);
+    async function init() {
+      rawData = await fetchData();
+      const sel = document.getElementById('clienteSelect');
+      const clients = [...new Set(rawData.map(r => r.Nombre + '|' + r.Apellidos))];
+      clients.forEach(c => {
+        const [n, a] = c.split('|');
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = `${n} ${a}`;
+        sel.appendChild(opt);
       });
-      sel.addEventListener('change',applyFilter);
-      document.getElementById('fromDate').addEventListener('change',applyFilter);
-      document.getElementById('toDate').addEventListener('change',applyFilter);
+      sel.addEventListener('change', applyFilter);
+      document.getElementById('fromDate').addEventListener('change', applyFilter);
+      document.getElementById('toDate').addEventListener('change', applyFilter);
       applyFilter();
     }
 
