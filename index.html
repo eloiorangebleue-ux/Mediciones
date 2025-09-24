@@ -8,70 +8,118 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --green-light: #d4edda; --green: #28a745; --green-dark: #1e7e34;
-      --blue-light: #d1ecf1; --blue: #17a2b8; --blue-dark: #117a8b;
+      --green-light: #d4edda;
+      --green: #28a745;
+      --green-dark: #1e7e34;
+      --blue-light: #d1ecf1;
+      --blue: #17a2b8;
+      --blue-dark: #117a8b;
       --danger: #f5576c;
-      --background: linear-gradient(135deg,#e8f5e9 0%,#e3f2fd 100%);
+      --background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Poppins',sans-serif; background:var(--background); color:#333; min-height:100vh; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--background);
+      color: #333;
+      min-height: 100vh;
+    }
     .selector-container {
-      position:fixed; top:20px; right:20px; background:var(--green-light);
-      padding:12px 18px; border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,0.1);
-      z-index:1001;
+      position: fixed; top: 20px; right: 20px;
+      background: var(--green-light); padding: 12px 18px;
+      border-radius: 10px; box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      z-index: 1001;
     }
-    .selector-container label { font-weight:600; margin-right:8px; color:var(--green-dark); }
+    .selector-container label {
+      font-weight: 600; margin-right: 8px; color: var(--green-dark);
+    }
     .selector-container select {
-      font-family:'Poppins',sans-serif; font-size:.95em; border-radius:6px;
-      padding:6px 12px; border:2px solid var(--blue-light); background:#fff;
-      box-shadow:0 1px 4px rgba(0,0,0,0.1); transition:border .2s,background .2s;
+      font-size: 0.95em; border-radius: 6px; padding: 6px 12px;
+      border: 2px solid var(--blue-light); background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      transition: border 0.2s, background 0.2s;
     }
-    .selector-container select:focus { border-color:var(--green); background:#f8fff9; outline:none; }
+    .selector-container select:focus {
+      border-color: var(--green); background: #f8fff9; outline: none;
+    }
     .container {
-      max-width:1250px; margin:100px auto 40px; background:#fff; border-radius:20px;
-      box-shadow:0 20px 48px rgba(0,0,0,0.07); overflow:hidden; padding-bottom:30px;
-      animation:fadeIn 1s ease-out;
+      max-width: 1250px; margin: 100px auto 40px;
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.07);
+      overflow: hidden; padding-bottom: 30px;
+      animation: fadeIn 1s ease-out;
     }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:none;} }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: none; }
+    }
     .header {
-      background:var(--blue); color:#fff; padding:30px 25px 20px;
-      display:flex; align-items:center; justify-content:center; gap:20px;
+      background: var(--blue); color: white;
+      padding: 30px 25px 20px;
+      display: flex; align-items: center; justify-content: center; gap: 20px;
     }
-    .header img { height:70px; width:auto; }
-    .header h1 { font-size:2.2em; font-weight:700; letter-spacing:-1px; }
-    .header p { font-size:1.1em; opacity:.9; margin-top:4px; }
+    .header img { height: 70px; width: auto; }
+    .header h1 { font-size: 2.2em; font-weight: 700; letter-spacing: -1px; }
+    .header p { font-size: 1.1em; opacity: 0.9; margin-top: 4px; }
     .grid {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-      gap:36px; padding:40px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 36px; padding: 40px;
     }
     .card {
-      background:#fff; border-radius:15px;
-      box-shadow:0 6px 24px rgba(0,0,0,0.05),0 1px 6px rgba(0,0,0,0.08);
-      padding:20px; display:flex; flex-direction:column; align-items:center;
-      transition:transform .2s,box-shadow .2s;
+      background: #fff; border-radius: 15px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.05), 0 1px 6px rgba(0,0,0,0.08);
+      padding: 20px; display: flex; flex-direction: column; align-items: center;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .card:hover { transform:translateY(-5px); box-shadow:0 12px 44px rgba(0,0,0,0.15); }
-    .card h3 { font-size:1.2em; color:var(--green-dark); margin-bottom:18px; font-weight:700; letter-spacing:.5px; }
-    .chart-container { width:100%; min-height:225px; }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 44px rgba(0,0,0,0.15);
+    }
+    .card h3 {
+      font-size: 1.2em; color: var(--green-dark);
+      margin-bottom: 18px; font-weight: 700; letter-spacing: 0.5px;
+    }
+    .chart-container { width: 100%; min-height: 225px; }
     .summary-report {
-      background:#f5f9f7; border-top:4px solid var(--green);
-      margin:40px 20px 20px; padding:30px 20px; border-radius:0 0 20px 20px;
+      background: #f5f9f7; border-top: 4px solid var(--green);
+      margin: 40px 20px 20px; padding: 30px 20px; border-radius: 0 0 20px 20px;
     }
-    .summary-report h2 { text-align:center; color:var(--green-dark); margin-bottom:10px; font-size:1.8em; }
-    .summary-dates { text-align:center; margin-bottom:20px; color:var(--blue-dark); font-size:.95em; }
-    .summary-table { width:100%; border-collapse:collapse; margin-top:10px; }
-    .summary-table th, .summary-table td {
-      border:1px solid #ddd; padding:8px; text-align:center;
+    .summary-report h2 {
+      text-align: center; color: var(--green-dark);
+      margin-bottom: 10px; font-size: 1.8em;
     }
-    .summary-table th { background:var(--blue-light); color:#000; }
-    .positive { color:var(--green-dark); }
-    .negative { color:var(--danger); }
-    @media(max-width:900px){ .container{margin:120px 10px 20px;} .grid{padding:20px;gap:26px;} }
-    @media(max-width:600px){
-      .selector-container{position:static;margin:10px auto;text-align:center;}
-      .header{flex-direction:column;padding:20px 6vw 15px;}
-      .header h1{font-size:1.8em;} .grid{display:block;padding:10px 2vw;}
-      .card{margin-bottom:26px;}
+    .summary-dates {
+      text-align: center; margin-bottom: 20px;
+      color: var(--blue-dark); font-size: 0.95em;
+    }
+    .summary-table {
+      width: 100%; border-collapse: collapse; margin-top: 10px;
+    }
+    .summary-table th,
+    .summary-table td {
+      border: 1px solid #ddd; padding: 8px; text-align: center;
+    }
+    .summary-table th {
+      background: var(--blue-light); color: #000;
+    }
+    .positive { color: var(--green-dark); }
+    .negative { color: var(--danger); }
+    @media (max-width: 900px) {
+      .container { margin: 120px 10px 20px; }
+      .grid { padding: 20px; gap: 26px; }
+    }
+    @media (max-width: 600px) {
+      .selector-container {
+        position: static; margin: 10px auto; text-align: center;
+      }
+      .header {
+        flex-direction: column; padding: 20px 6vw 15px;
+      }
+      .header h1 { font-size: 1.8em; }
+      .grid {
+        display: block; padding: 10px 2vw;
+      }
+      .card { margin-bottom: 26px; }
     }
   </style>
 </head>
@@ -103,102 +151,152 @@
       </table>
     </div>
   </div>
-  <script>
-    const SHEET_URL='https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
-    let charts={}, fechasGlobal=[];
 
-    function drawChart(id,data,color){
-      const ctx=document.getElementById(id).getContext('2d');
-      if(charts[id]){
-        charts[id].data.labels=fechasGlobal;
-        charts[id].data.datasets[0].data=data;
+  <script>
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
+    let charts = {}, fechasGlobal = [];
+
+    function drawChart(id, data, color) {
+      const ctx = document.getElementById(id).getContext('2d');
+      if (charts[id]) {
+        charts[id].data.labels = fechasGlobal;
+        charts[id].data.datasets[0].data = data;
         charts[id].update();
       } else {
-        charts[id]=new Chart(ctx,{
-          type:'line',
-          data:{labels:fechasGlobal,datasets:[{data,borderColor:color,backgroundColor:color+'33',fill:true,tension:0.4,pointRadius:4}]},
-          options:{responsive:true,maintainAspectRatio:false,
-            scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:'#eee'}}},
-            plugins:{legend:{display:false}}
+        charts[id] = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: fechasGlobal,
+            datasets: [{
+              data,
+              borderColor: color,
+              backgroundColor: color + '33',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { display: false } },
+              y: { beginAtZero: false, grid: { color: '#eee' } }
+            },
+            plugins: { legend: { display: false } }
           }
         });
       }
     }
 
-    function renderizarGraficos(datos){
-      datos.sort((a,b)=>new Date(a.Fecha)-new Date(b.Fecha));
-      fechasGlobal=datos.map(r=>new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
-      const getData=k=>datos.map(r=>parseFloat(r[k])||0);
-      const metrics=[
-        {key:'Peso corporal Kg',id:'pesoChart',color:'#28a745',label:'Peso (Kg)'},
-        {key:'BMI (Índice Masa Corporal)',id:'bmiChart',color:'#17a2b8',label:'BMI'},
-        {key:'% Grasa corporal',id:'grasaChart',color:'#f5576c',label:'% Grasa'},
-        {key:'% Agua total del cuerpo',id:'aguaChart',color:'#28a745',label:'% Agua'},
-        {key:'Masa muscular Kg',id:'musculoChart',color:'#17a2b8',label:'Masa Muscular'},
-        {key:'BMR (Tasa Metabólica Basal)',id:'bmrChart',color:'#28a745',label:'BMR'},
-        {key:'Edad metabólica',id:'edadChart',color:'#17a2b8',label:'Edad Metabólica'},
-        {key:'Nivel de grasa visceral',id:'visceralChart',color:'#f5576c',label:'Grasa Visceral'},
-        {key:'Nuevo Campo',id:'nuevoCampoChart',color:'#FFA500',label:'Nuevo Campo'}
+    function renderizarGraficos(datos) {
+      console.log('renderizarGraficos datos:', datos);
+      datos.sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha));
+      fechasGlobal = datos.map(r =>
+        new Date(r.Fecha).toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })
+      );
+      const getData = key => datos.map(r => parseFloat(r[key]) || 0);
+      const metrics = [
+        { key: 'Peso corporal Kg', id: 'pesoChart', color: '#28a745', label: 'Peso (Kg)' },
+        { key: 'BMI (Índice Masa Corporal)', id: 'bmiChart', color: '#17a2b8', label: 'BMI' },
+        { key: '% Grasa corporal', id: 'grasaChart', color: '#f5576c', label: '% Grasa' },
+        { key: '% Agua total del cuerpo', id: 'aguaChart', color: '#28a745', label: '% Agua' },
+        { key: 'Masa muscular Kg', id: 'musculoChart', color: '#17a2b8', label: 'Masa Muscular' },
+        { key: 'BMR (Tasa Metabólica Basal)', id: 'bmrChart', color: '#28a745', label: 'BMR' },
+        { key: 'Edad metabólica', id: 'edadChart', color: '#17a2b8', label: 'Edad Metabólica' },
+        { key: 'Nivel de grasa visceral', id: 'visceralChart', color: '#f5576c', label: 'Grasa Visceral' }
       ];
-      document.getElementById('chartsGrid').innerHTML=metrics.map(m=>`
-        <div class="card">
-          <h3>${m.label}</h3>
-          <div class="chart-container"><canvas id="${m.id}"></canvas></div>
-        </div>`).join('');
-      metrics.forEach(m=>drawChart(m.id,getData(m.key),m.color));
+      const grid = document.getElementById('chartsGrid');
+      grid.innerHTML = metrics.map(m =>
+        `<div class="card"><h3>${m.label}</h3><div class="chart-container"><canvas id="${m.id}"></canvas></div></div>`
+      ).join('');
+      metrics.forEach(m =>
+        drawChart(m.id, getData(m.key), m.color)
+      );
     }
 
-    function generarResumen(datos){
-      if(datos.length<2) return;
-      const first=datos[0], last=datos[datos.length-1];
-      document.getElementById('summaryDates').textContent=
+    function generarResumen(datos) {
+      if (datos.length < 2) return;
+      const first = datos[0], last = datos[datos.length - 1];
+      document.getElementById('summaryDates').textContent =
         `Desde ${new Date(first.Fecha).toLocaleDateString()} hasta ${new Date(last.Fecha).toLocaleDateString()}`;
-      const metrics=[
-        {key:'Peso corporal Kg',label:'Peso (Kg)',optimal:'IMC normal',classify:()=>null},
-        {key:'BMI (Índice Masa Corporal)',label:'BMI',optimal:'18.5–24.9',classify:v=>v<18.5?'Bajo peso':v<25?'Normal':v<30?'Sobrepeso':'Obesidad'},
-        {key:'% Grasa corporal',label:'% Grasa',optimal:'Hombres:10–20%, Mujeres:18–28%',classify:v=>v<10?'Bajo':v<=20?'Saludable':v<=28?'Saludable':'Alto'},
-        {key:'Masa muscular Kg',label:'Masa Muscular',optimal:'Varía según edad y sexo',classify:()=>null},
-        {key:'BMR (Tasa Metabólica Basal)',label:'BMR',optimal:'Depende de edad/s.',classify:()=>null},
-        {key:'Edad metabólica',label:'Edad Metabólica',optimal:'<= Edad real',classify:()=>null},
-        {key:'Nivel de grasa visceral',label:'Grasa Visceral',optimal:'1–9 saludable',classify:v=>v<=9?'Saludable':v<=14?'Moderado':'Alto riesgo'},
-        {key:'Nuevo Campo',label:'Nuevo Campo',optimal:'Rango X–Y',classify:v=>v<X?'Bajo':v<=Y?'Óptimo':'Alto'}
+      const metrics = [
+        { key: 'Peso corporal Kg', label: 'Peso (Kg)', optimal: 'IMC normal', classify: () => null },
+        {
+          key: 'BMI (Índice Masa Corporal)', label: 'BMI', optimal: '18.5–24.9',
+          classify: v => v < 18.5 ? 'Bajo peso' : v < 25 ? 'Normal' : v < 30 ? 'Sobrepeso' : 'Obesidad'
+        },
+        {
+          key: '% Grasa corporal', label: '% Grasa', optimal: 'Hombres:10–20%, Mujeres:18–28%',
+          classify: v => v < 10 ? 'Bajo' : v <= 20 ? 'Saludable' : v <= 28 ? 'Saludable' : 'Alto'
+        },
+        {
+          key: 'Masa muscular Kg', label: 'Masa Muscular', optimal: 'Varía según edad y sexo',
+          classify: () => null
+        },
+        {
+          key: 'BMR (Tasa Metabólica Basal)', label: 'BMR', optimal: 'Depende de edad/s.',
+          classify: () => null
+        },
+        {
+          key: 'Edad metabólica', label: 'Edad Metabólica', optimal: '<= Edad real',
+          classify: () => null
+        },
+        {
+          key: 'Nivel de grasa visceral', label: 'Grasa Visceral', optimal: '1–9 saludable',
+          classify: v => v <= 9 ? 'Saludable' : v <= 14 ? 'Moderado' : 'Alto riesgo'
+        }
       ];
-      const tbody=document.getElementById('summaryTableBody');
-      tbody.innerHTML='';
-      metrics.forEach(m=>{
-        const a=parseFloat(first[m.key]), b=parseFloat(last[m.key]);
-        if(isNaN(a)||isNaN(b)) return;
-        const diff=(b-a).toFixed(1), sign=diff>=0?'+':'';
-        const status=m.classify(b) || (diff==='0.0'?'Sin cambio':diff>0?'Subió':'Bajó');
-        const tr=document.createElement('tr');
-        tr.innerHTML=`
+      const tbody = document.getElementById('summaryTableBody');
+      tbody.innerHTML = '';
+      metrics.forEach(m => {
+        const a = parseFloat(first[m.key]), b = parseFloat(last[m.key]);
+        if (isNaN(a) || isNaN(b)) return;
+        const diff = (b - a).toFixed(1), sign = diff >= 0 ? '+' : '';
+        const status = m.classify(b) ||
+          (diff === '0.0' ? 'Sin cambio' : diff > 0 ? 'Subió' : 'Bajó');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
           <td>${m.label}</td>
           <td>${a}</td>
           <td>${b}</td>
           <td>${sign}${diff}</td>
           <td>${m.optimal}</td>
-          <td class="${['Normal','Saludable','Óptimo'].includes(status)?'positive':'negative'}">${status}</td>
+          <td class="${['Normal','Saludable'].includes(status)?'positive':'negative'}">${status}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    async function init(){
-      const data=await fetch(SHEET_URL).then(r=>r.json());
-      const sel=document.getElementById('clienteSelect');
-      const names=[...new Set(data.map(r=>(r.Nombre+' '+r.Apellidos).trim()))];
-      sel.innerHTML='<option value="">—Selecciona cliente—</option>';
-      names.forEach(n=>sel.appendChild(Object.assign(document.createElement('option'),{value:n,textContent:n})));
-      sel.addEventListener('change',()=>{
-        const [nom,...ap]=sel.value.split(' '), apellido=ap.join(' ');
-        const url=sel.value
-          ?`${SHEET_URL}?nombre=${encodeURIComponent(nom)}&apellido=${encodeURIComponent(apellido)}`
-          :SHEET_URL;
-        fetch(url).then(r=>r.json()).then(d=>{renderizarGraficos(d); generarResumen(d);});
-      });
-      renderizarGraficos(data);
-      generarResumen(data);
+    async function init() {
+      try {
+        const allData = await fetch(SHEET_URL).then(r => r.json());
+        console.log('Datos JSON:', allData);
+        const sel = document.getElementById('clienteSelect');
+        const names = [...new Set(allData.map(r => (r.Nombre + ' ' + r.Apellidos).trim()))];
+        sel.innerHTML = '<option value="">—Selecciona cliente—</option>';
+        names.forEach(n => {
+          const o = document.createElement('option');
+          o.value = n; o.textContent = n;
+          sel.appendChild(o);
+        });
+        sel.addEventListener('change', () => {
+          const [nom, ...ap] = sel.value.split(' '), apellido = ap.join(' ');
+          const url = sel.value
+            ? `${SHEET_URL}?nombre=${encodeURIComponent(nom)}&apellido=${encodeURIComponent(apellido)}`
+            : SHEET_URL;
+          fetch(url).then(r => r.json()).then(data => {
+            renderizarGraficos(data);
+            generarResumen(data);
+          });
+        });
+        renderizarGraficos(allData);
+        generarResumen(allData);
+      } catch (e) {
+        console.error('Error al cargar datos:', e);
+      }
     }
+
     init();
   </script>
 </body>
