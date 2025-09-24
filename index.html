@@ -4,80 +4,35 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Evolución Biomédica</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root {
-      --bg-light: #f5f9f7;
-      --primary: #17a2b8;
-      --accent: #28a745;
-      --danger: #f5576c;
-      --text-dark: #333;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Poppins',sans-serif; background:var(--bg-light); color:var(--text-dark); }
-    .wrapper { max-width:1100px; margin:40px auto; padding:0 20px; }
-    h1 { text-align:center; margin-bottom:10px; font-weight:600; }
-    .filters {
-      display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin:20px 0;
-    }
-    .filters label { font-weight:500; }
-    .filters input {
-      padding:6px 10px; border:1px solid #ccc; border-radius:4px;
-      background:#fff;
-    }
-    .charts {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-      gap:24px; margin-bottom:40px;
-    }
-    .chart-card {
-      background:#fff; padding:16px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);
-    }
-    .chart-card h3 { margin-bottom:8px; font-size:1em; text-align:center; }
-    .chart-card canvas { max-width:100%; height:200px; }
-    .data-table, .summary-table {
-      width:100%; border-collapse:collapse; margin-bottom:40px;
-    }
-    .data-table th, .data-table td,
-    .summary-table th, .summary-table td {
-      border:1px solid #ddd; padding:8px; text-align:center;
-    }
-    .data-table th, .summary-table th { background:var(--primary); color:#fff; }
-    .summary-positive { color:var(--accent); }
-    .summary-negative { color:var(--danger); }
-    @media(max-width:600px){
-      .filters { flex-direction:column; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
   <div class="wrapper">
-    <h1>Evolución Biomédica</h1>
+    <h1>📊 Evolución Biomédica</h1>
     <div class="filters">
-      <label>Cliente:
-        <select id="clienteSelect"><option value="">—Cargando—</option></select>
+      <label>Cliente
+        <select id="clienteSelect">
+          <option value="">—Cargando—</option>
+        </select>
       </label>
-      <label>Desde:
+      <label>Desde
         <input type="date" id="fromDate"/>
       </label>
-      <label>Hasta:
+      <label>Hasta
         <input type="date" id="toDate"/>
       </label>
       <button id="applyFilter">Aplicar filtro</button>
     </div>
-
-    <div class="charts" id="chartsGrid">
-      <!-- Gráficos dinámicos -->
-    </div>
-
+    <div class="charts" id="chartsGrid"></div>
     <table class="data-table" id="dataTable">
       <thead>
         <tr><th>Fecha</th><th>Métrica</th><th>Valor</th></tr>
       </thead>
       <tbody></tbody>
     </table>
-
-    <h2>📋 Resumen Estadístico</h2>
+    <h2 style="text-align:center; margin-bottom:16px;">📋 Resumen Estadístico</h2>
     <table class="summary-table" id="summaryTable">
       <thead>
         <tr>
@@ -90,7 +45,7 @@
   </div>
 
   <script>
-    const SHEET_URL = 'https://script.google.com/macros/s/…/exec';
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
     let rawData = [];
 
     async function fetchData(params='') {
@@ -109,22 +64,31 @@
         { key:'Edad metabólica', label:'Edad Metabólica', color:'#17a2b8' },
         { key:'Nivel de grasa visceral', label:'Grasa Visceral', color:'#f5576c' }
       ];
-      document.getElementById('chartsGrid').innerHTML = '';
-      const dates = data.map(r=>new Date(r.Fecha).toLocaleDateString());
+      const dates = data.map(r => new Date(r.Fecha).toLocaleDateString());
+      const container = document.getElementById('chartsGrid');
+      container.innerHTML = '';
       metrics.forEach(m => {
-        const ctxId = 'chart_' + m.key.replace(/\s+/g,'');
-        document.getElementById('chartsGrid').innerHTML += `
+        const id = 'chart_' + m.key.replace(/\s+/g,'');
+        container.innerHTML += `
           <div class="chart-card">
             <h3>${m.label}</h3>
-            <canvas id="${ctxId}"></canvas>
+            <canvas id="${id}"></canvas>
           </div>`;
-        const ctx = document.getElementById(ctxId).getContext('2d');
+        const ctx = document.getElementById(id).getContext('2d');
         new Chart(ctx, {
-          type:'line',
-          data:{ labels:dates, datasets:[{ data:data.map(r=>+r[m.key]||0),
-            borderColor:m.color, backgroundColor:m.color+'33', fill:true }]
+          type: 'line',
+          data: {
+            labels: dates,
+            datasets: [{
+              data: data.map(r => parseFloat(r[m.key]) || 0),
+              borderColor: m.color,
+              backgroundColor: m.color + '33',
+              fill: true,
+              tension: 0.3,
+              pointRadius: 3
+            }]
           },
-          options:{ responsive:true, scales:{ x:{grid:{display:false}} } }
+          options: { responsive: true, scales: { x: { grid: { display: false } } } }
         });
       });
     }
@@ -133,18 +97,20 @@
       const tbody = document.querySelector('#dataTable tbody');
       tbody.innerHTML = '';
       data.forEach(r => {
-        Object.keys(r).forEach(k => {
-          if (k==='Fecha' || isNaN(+r[k])) return;
+        Object.entries(r).forEach(([k,v]) => {
+          if (k === 'Fecha' || isNaN(parseFloat(v))) return;
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${new Date(r.Fecha).toLocaleDateString()}</td>
-                          <td>${k}</td><td>${r[k]}</td>`;
+          tr.innerHTML = `
+            <td>${new Date(r.Fecha).toLocaleDateString()}</td>
+            <td>${k}</td>
+            <td>${v}</td>`;
           tbody.appendChild(tr);
         });
       });
     }
 
     function buildSummary(data) {
-      if (data.length<2) return;
+      if (data.length < 2) return;
       const first = data[0], last = data[data.length-1];
       const metrics = [
         { key:'Peso corporal Kg', label:'Peso (Kg)', optimal:'IMC 18.5–24.9', classify:v=>v<18.5?'Bajo peso':v<25?'Normal':'Sobrepeso' },
@@ -155,12 +121,15 @@
       const tbody = document.querySelector('#summaryTable tbody');
       tbody.innerHTML = '';
       metrics.forEach(m => {
-        const a = +first[m.key], b = +last[m.key];
+        const a = parseFloat(first[m.key]), b = parseFloat(last[m.key]);
+        if (isNaN(a)||isNaN(b)) return;
         const diff = (b - a).toFixed(1), sign = diff>=0?'+':'';
         const status = m.classify(b);
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${m.label}</td>
-          <td>${a.toFixed(1)}</td><td>${b.toFixed(1)}</td>
+        tr.innerHTML = `
+          <td>${m.label}</td>
+          <td>${a.toFixed(1)}</td>
+          <td>${b.toFixed(1)}</td>
           <td>${sign}${diff}</td>
           <td>${m.optimal}</td>
           <td class="${status==='Normal'||status==='Saludable'?'summary-positive':'summary-negative'}">${status}</td>`;
@@ -170,13 +139,14 @@
 
     async function applyFilter() {
       const cliente = document.getElementById('clienteSelect').value;
-      let params = cliente ? `?nombre=${encodeURIComponent(cliente.split(' ')[0])}&apellido=${encodeURIComponent(cliente.split(' ')[1]||'')}` : '';
+      let params = cliente
+        ? `?nombre=${encodeURIComponent(cliente.split(' ')[0])}&apellido=${encodeURIComponent(cliente.split(' ')[1]||'')}`
+        : '';
       const from = document.getElementById('fromDate').value;
-      const to   = document.getElementById('toDate').value;
+      const to = document.getElementById('toDate').value;
       if (from) params += (params?'&':'?') + `from=${from}`;
-      if (to)   params += (params?'&':'?') + `to=${to}`;
+      if (to) params   += (params?'&':'?') + `to=${to}`;
       const data = await fetchData(params);
-      rawData = data;
       buildCharts(data);
       buildTable(data);
       buildSummary(data);
@@ -184,18 +154,18 @@
 
     async function init() {
       const data = await fetchData();
-      rawData = data;
       const sel = document.getElementById('clienteSelect');
-      [...new Set(data.map(r=>r.Nombre+' '+r.Apellidos))].forEach(n=>{
-        const opt = document.createElement('option');
-        opt.value = n; opt.textContent = n;
-        sel.appendChild(opt);
+      [...new Set(data.map(r=>r.Nombre+' '+r.Apellidos))].forEach(n => {
+        const o = document.createElement('option');
+        o.value = n; o.textContent = n;
+        sel.appendChild(o);
       });
       document.getElementById('applyFilter').addEventListener('click', applyFilter);
       buildCharts(data);
       buildTable(data);
       buildSummary(data);
     }
+
     init();
   </script>
 </body>
