@@ -34,6 +34,17 @@
       margin-bottom:20px;
       font-weight:600;
     }
+    .filters {
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin-bottom:30px;
+    }
+    .filters select {
+      padding:8px 12px; border:1px solid #ccc;
+      border-radius:6px; background:#fff;
+      font-size:.95em;
+    }
     .summary-cards {
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
@@ -79,7 +90,7 @@
       width:100%; border-collapse:collapse; margin-top:10px;
     }
     th, td {
-      padding:8px; border-bottom:1px solid #eee;
+      padding:12px 8px; border-bottom:1px solid #eee;
       text-align:center; font-size:.9em;
     }
     th {
@@ -88,9 +99,14 @@
     tr:last-child td {
       border-bottom:none;
     }
-    .positive { color:var(--accent); font-weight:600; }
-    .negative { color:var(--warn); font-weight:600; }
+    .positive {
+      color:var(--accent); font-weight:600;
+    }
+    .negative {
+      color:var(--warn); font-weight:600;
+    }
     @media(max-width:600px){
+      .filters { flex-direction:column; }
       .summary-cards { grid-template-columns:1fr; }
       .chart-wrapper canvas { height:220px!important; }
     }
@@ -99,27 +115,24 @@
 <body>
   <div class="container">
     <h1>📊 Dashboard Salud</h1>
+    <div class="filters">
+      <select id="clienteSelect">
+        <option value="">—Selecciona Cliente—</option>
+      </select>
+    </div>
 
     <div class="summary-cards">
       <div class="card">
-        <h2 id="card-weight">—</h2>
-        <p>Kg</p>
-        <small>Peso actual</small>
+        <h2 id="card-weight">—</h2><p>Kg</p><small>Peso actual</small>
       </div>
       <div class="card">
-        <h2 id="card-bmi">—</h2>
-        <p>—</p>
-        <small>BMI actual</small>
+        <h2 id="card-bmi">—</h2><p>—</p><small>BMI actual</small>
       </div>
       <div class="card">
-        <h2 id="card-fat">—</h2>
-        <p>%</p>
-        <small>Grasa corporal actual</small>
+        <h2 id="card-fat">—</h2><p>%</p><small>Grasa corporal actual</small>
       </div>
       <div class="card">
-        <h2 id="card-visceral">—</h2>
-        <p>—</p>
-        <small>Grasa visceral actual</small>
+        <h2 id="card-visceral">—</h2><p>—</p><small>Grasa visceral actual</small>
       </div>
     </div>
 
@@ -148,73 +161,87 @@
     const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
     let dataAll = [];
 
-    async function fetchData() {
-      const res = await fetch(SHEET_URL);
+    async function fetchData(params='') {
+      const res = await fetch(SHEET_URL + params);
       return res.json();
     }
 
     function updateSummary(last) {
-      document.getElementById('card-weight').textContent = parseFloat(last['Peso corporal Kg']).toFixed(1);
-      document.getElementById('card-bmi').textContent    = parseFloat(last['BMI (Índice Masa Corporal)']).toFixed(1);
-      document.getElementById('card-fat').textContent    = parseFloat(last['% Grasa corporal']).toFixed(1);
-      document.getElementById('card-visceral').textContent = parseFloat(last['Nivel de grasa visceral']);
+      document.getElementById('card-weight').textContent    = parseFloat(last['Peso corporal Kg']).toFixed(1);
+      document.getElementById('card-bmi').textContent       = parseFloat(last['BMI (Índice Masa Corporal)']).toFixed(1);
+      document.getElementById('card-fat').textContent       = parseFloat(last['% Grasa corporal']).toFixed(1);
+      document.getElementById('card-visceral').textContent  = parseFloat(last['Nivel de grasa visceral']);
     }
 
     function renderChart(data) {
       const ctx = document.getElementById('evolChart').getContext('2d');
-      const labels = data.map(r => new Date(r.Fecha).toLocaleDateString());
-      const weight = data.map(r => parseFloat(r['Peso corporal Kg'])||0);
-      if (window.eChart) window.eChart.destroy();
+      const labels = data.map(r=>new Date(r.Fecha).toLocaleDateString());
+      const weight = data.map(r=>parseFloat(r['Peso corporal Kg'])||0);
+      if(window.eChart) window.eChart.destroy();
       window.eChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Peso (Kg)',
-            data: weight,
-            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary'),
-            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary')+'33',
-            fill: true,
-            tension: 0.3,
-            pointRadius: 3
-          }]
-        },
-        options: { responsive: true }
+        type:'line',
+        data:{ labels, datasets:[{ label:'Peso (Kg)', data:weight,
+            borderColor:getComputedStyle(document.documentElement).getPropertyValue('--primary'),
+            backgroundColor:getComputedStyle(document.documentElement).getPropertyValue('--primary')+'33',
+            fill:true, tension:0.3, pointRadius:3
+        }]},
+        options:{ responsive:true }
       });
     }
 
     function renderComparison(data) {
       const first = data[0], last = data[data.length-1];
       const metrics = [
-        { key:'Peso corporal Kg', label:'Peso (Kg)', classify: v => v<first['Peso corporal Kg'] ? 'Disminuyó' : 'Aumentó' },
-        { key:'BMI (Índice Masa Corporal)', label:'BMI', classify: v => v < first['BMI (Índice Masa Corporal)'] ? 'Mejora' : 'Empeoró' },
-        { key:'% Grasa corporal', label:'% Grasa', classify: v => v < first['% Grasa corporal'] ? 'Mejora' : 'Empeoró' },
-        { key:'Nivel de grasa visceral', label:'Grasa visceral', classify: v => v < first['Nivel de grasa visceral'] ? 'Mejora' : 'Empeoró' }
+        { key:'Peso corporal Kg', label:'Peso (Kg)', classify:v=>v<first['Peso corporal Kg']?'Mejora':'Empeoró' },
+        { key:'BMI (Índice Masa Corporal)', label:'BMI', classify:v=>v<first['BMI (Índice Masa Corporal)']?'Mejora':'Empeoró' },
+        { key:'% Grasa corporal', label:'% Grasa', classify:v=>v<first['% Grasa corporal']?'Mejora':'Empeoró' },
+        { key:'Nivel de grasa visceral', label:'Visceral', classify:v=>v<first['Nivel de grasa visceral']?'Mejora':'Empeoró' }
       ];
       const tbody = document.getElementById('comparisonBody');
       tbody.innerHTML = '';
-      metrics.forEach(m => {
-        const a = parseFloat(first[m.key]), b = parseFloat(last[m.key]);
-        const diff = (b - a).toFixed(1), sign = diff>=0?'+':'';
-        const status = m.classify(b);
-        const tr = document.createElement('tr');
+      metrics.forEach(m=>{
+        const a=parseFloat(first[m.key]), b=parseFloat(last[m.key]);
+        const diff=(b-a).toFixed(1), sign=diff>=0?'+':'';
+        const status=m.classify(b);
+        const tr=document.createElement('tr');
         tr.innerHTML = `
           <td>${m.label}</td>
           <td>${a.toFixed(1)}</td>
           <td>${b.toFixed(1)}</td>
           <td>${sign}${diff}</td>
-          <td class="${status==='Mejora'?'positive':'negative'}">${status}</td>
-        `;
+          <td class="${status==='Mejora'?'positive':'negative'}">${status}</td>`;
         tbody.appendChild(tr);
       });
     }
 
-    async function init() {
-      dataAll = await fetchData();
-      if (!dataAll.length) return;
+    async function applyClient(client) {
+      let params = '';
+      if(client) {
+        const [n,a] = client.split('|');
+        params = `?nombre=${encodeURIComponent(n)}&apellido=${encodeURIComponent(a)}`;
+      }
+      const data = await fetchData(params);
+      dataAll = data;
+      if(!dataAll.length) return;
       updateSummary(dataAll[dataAll.length-1]);
       renderChart(dataAll);
       renderComparison(dataAll);
+    }
+
+    async function init() {
+      const sel = document.getElementById('clienteSelect');
+      const data = await fetchData();
+      const clients = [...new Set(data.map(r => r.Nombre + '|' + r.Apellidos))];
+      clients.forEach(c=>{
+        const [n,a] = c.split('|');
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = `${n} ${a}`;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', ()=>applyClient(sel.value));
+      // load all by default
+      applyClient('');
     }
 
     init();
