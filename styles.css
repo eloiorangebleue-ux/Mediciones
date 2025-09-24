@@ -1,11 +1,14 @@
 :root {
-  --bg-light: #f5f9f7;
+  --bg-light: #f9fbfc;
+  --card-bg: #ffffff;
   --primary: #17a2b8;
+  --primary-dark: #128a9e;
   --accent: #28a745;
   --danger: #f5576c;
-  --text-dark: #333;
-  --card-bg: #ffffff;
+  --text-dark: #2c3e50;
   --border-light: #e0e0e0;
+  --radius: 8px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 * {
@@ -21,75 +24,84 @@ body {
 }
 
 .wrapper {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 40px auto;
   padding: 0 20px;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 10px;
   font-weight: 600;
+  margin-bottom: 20px;
 }
 
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
   justify-content: center;
-  margin: 20px 0;
+  background: var(--card-bg);
+  padding: 16px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
 }
 
 .filters label {
-  font-weight: 500;
+  font-size: 0.9em;
+  color: #555;
 }
 
-.filters input,
 .filters select,
+.filters input,
 .filters button {
-  padding: 6px 10px;
+  margin-top: 6px;
+  padding: 8px 12px;
   border: 1px solid var(--border-light);
   border-radius: 4px;
   background: var(--card-bg);
-  color: var(--text-dark);
   font-size: 0.95em;
+  font-family: inherit;
 }
 
 .filters button {
   background: var(--primary);
   color: #fff;
-  border-color: var(--primary);
+  border: none;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .filters button:hover {
-  background: darken(var(--primary), 10%);
+  background: var(--primary-dark);
 }
 
 .charts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
   margin-bottom: 40px;
 }
 
 .chart-card {
   background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-card h3 {
-  margin-bottom: 8px;
   font-size: 1em;
+  margin-bottom: 12px;
   text-align: center;
+  color: var(--primary);
 }
 
 .chart-card canvas {
   width: 100% !important;
-  height: 200px !important;
+  height: 220px !important;
 }
 
 .data-table,
@@ -97,26 +109,31 @@ h1 {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 40px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
 .data-table th,
 .data-table td,
 .summary-table th,
 .summary-table td {
-  border: 1px solid var(--border-light);
-  padding: 8px;
+  padding: 10px;
   text-align: center;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .data-table th,
 .summary-table th {
   background: var(--primary);
   color: #fff;
+  font-weight: 500;
 }
 
-.data-table tr:nth-child(even),
-.summary-table tr:nth-child(even) {
-  background: #fafafa;
+.data-table tr:last-child td,
+.summary-table tr:last-child td {
+  border-bottom: none;
 }
 
 .summary-positive {
