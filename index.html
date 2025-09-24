@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Dashboard Salud</title>
+  <title>Dashboard Salud Avanzado</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -24,156 +24,102 @@
       color:var(--text);
       line-height:1.4;
     }
-    .container {
-      max-width:1000px;
-      margin:40px auto;
-      padding:0 20px;
-    }
-    h1 {
-      text-align:center;
-      margin-bottom:20px;
-      font-weight:600;
-    }
-    .filters {
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      margin-bottom:30px;
-    }
+    .container { max-width:1000px; margin:40px auto; padding:0 20px; }
+    h1 { text-align:center; margin-bottom:20px; font-weight:600; }
+    .filters { display:flex; gap:12px; justify-content:center; margin-bottom:30px; }
     .filters select {
-      padding:8px 12px;
-      border:1px solid #ccc;
-      border-radius:6px;
-      background:#fff;
-      font-size:.95em;
+      padding:8px 12px; border:1px solid #ccc; border-radius:6px; background:#fff; font-size:.95em;
     }
     .summary-cards {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-      gap:20px;
-      margin-bottom:30px;
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; margin-bottom:30px;
     }
     .card {
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:20px;
-      text-align:center;
+      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:20px; text-align:center;
     }
-    .card h2 {
-      font-size:1.5em;
-      margin-bottom:8px;
-      color:var(--primary);
-    }
+    .card h3 { font-size:1em; margin-bottom:6px; color:#777; }
     .card p {
-      font-size:2em;
-      font-weight:600;
+      font-size:1.8em; margin-bottom:4px; font-weight:600; color:var(--primary);
     }
-    .card small {
-      display:block;
-      margin-top:6px;
-      color:#777;
+    .card .trend {
+      font-size:.9em; font-weight:600;
     }
+    .trend.up { color:var(--accent); }
+    .trend.down { color:var(--warn); }
     .chart-wrapper {
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:20px;
-      margin-bottom:30px;
+      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:20px; margin-bottom:30px;
     }
-    .chart-wrapper canvas {
-      width:100% !important;
-      height:300px !important;
+    .chart-controls { text-align:center; margin-bottom:12px; }
+    .chart-controls select {
+      padding:6px 10px; font-size:.9em; border-radius:4px; border:1px solid #ccc;
     }
+    .chart-wrapper canvas { width:100% !important; height:320px !important; }
     .comparison {
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:20px;
-      margin-bottom:40px;
+      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:20px; margin-bottom:40px;
     }
-    .comparison h2 {
-      margin-bottom:16px;
-      text-align:center;
-      color:var(--primary);
-    }
+    .comparison h2 { text-align:center; margin-bottom:16px; color:var(--primary); }
     table {
-      width:100%;
-      border-collapse:collapse;
-      margin-top:10px;
+      width:100%; border-collapse:collapse; margin-top:10px;
     }
     th, td {
-      padding:12px 8px;
-      border-bottom:1px solid #eee;
-      text-align:center;
-      font-size:.9em;
+      padding:12px 8px; border-bottom:1px solid #eee; text-align:center; font-size:.9em;
     }
-    th {
-      background:var(--primary);
-      color:#fff;
-    }
-    tr:last-child td {
-      border-bottom:none;
-    }
-    .positive {
-      color:var(--accent);
-      font-weight:600;
-    }
-    .negative {
-      color:var(--warn);
-      font-weight:600;
-    }
+    th { background:var(--primary); color:#fff; font-weight:500; }
+    tr:last-child td { border-bottom:none; }
+    .positive { color:var(--accent); font-weight:600; }
+    .negative { color:var(--warn); font-weight:600; }
     @media(max-width:600px){
       .filters { flex-direction:column; }
-      .summary-cards { grid-template-columns:1fr; }
-      .chart-wrapper canvas { height:220px!important; }
+      .chart-wrapper canvas { height:260px!important; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>📊 Dashboard Salud</h1>
+    <h1>📊 Dashboard Salud Avanzado</h1>
     <div class="filters">
-      <select id="clienteSelect">
-        <option value="">—Selecciona Cliente—</option>
+      <select id="clienteSelect"><option value="">—Selecciona Cliente—</option></select>
+      <select id="metricSelect">
+        <option value="Peso corporal Kg">Peso (Kg)</option>
+        <option value="BMI (Índice Masa Corporal)">BMI</option>
+        <option value="% Grasa corporal">% Grasa</option>
+        <option value="Masa muscular Kg">Masa Muscular</option>
+        <option value="% Agua total del cuerpo">% Agua</option>
+        <option value="BMR (Tasa Metabólica Basal)">BMR</option>
+        <option value="Edad metabólica">Edad Metabólica</option>
+        <option value="Nivel de grasa visceral">Grasa Visceral</option>
       </select>
     </div>
-    <div class="summary-cards">
-      <div class="card">
-        <h2 id="card-weight">–</h2>
-        <p>Kg</p>
-        <small>Peso actual</small>
-      </div>
-      <div class="card">
-        <h2 id="card-bmi">–</h2>
-        <p>–</p>
-        <small>BMI actual</small>
-      </div>
-      <div class="card">
-        <h2 id="card-fat">–</h2>
-        <p>%</p>
-        <small>Grasa corporal actual</small>
-      </div>
-      <div class="card">
-        <h2 id="card-visceral">–</h2>
-        <p>–</p>
-        <small>Grasa visceral actual</small>
-      </div>
+
+    <div class="summary-cards" id="cardsContainer">
+      <!-- tarjetas generadas dinámicamente -->
     </div>
+
     <div class="chart-wrapper">
+      <div class="chart-controls">
+        <label>Métrica: 
+          <select id="chartMetricSelect">
+            <option value="Peso corporal Kg">Peso</option>
+            <option value="BMI (Índice Masa Corporal)">BMI</option>
+            <option value="% Grasa corporal">% Grasa</option>
+            <option value="Masa muscular Kg">Masa Muscular</option>
+            <option value="% Agua total del cuerpo">% Agua</option>
+            <option value="BMR (Tasa Metabólica Basal)">BMR</option>
+            <option value="Edad metabólica">Edad Metabólica</option>
+            <option value="Nivel de grasa visceral">Grasa Visceral</option>
+          </select>
+        </label>
+      </div>
       <canvas id="evolChart"></canvas>
     </div>
+
     <div class="comparison">
       <h2>🔍 Comparativa y Análisis</h2>
       <table>
         <thead>
-          <tr>
-            <th>Métrica</th>
-            <th>Primera<br>Medición</th>
-            <th>Última<br>Medición</th>
-            <th>Δ</th>
-            <th>Estado</th>
-          </tr>
+          <tr><th>Métrica</th><th>Inicio</th><th>Último</th><th>Δ</th><th>Estado</th></tr>
         </thead>
         <tbody id="comparisonBody"></tbody>
       </table>
@@ -181,94 +127,121 @@
   </div>
 
   <script>
-    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
-    let allData = [];
+    const SHEET_URL = 'https://script.google.com/macros/s/.../exec';
+    let rawData = [];
 
     async function fetchData(params='') {
       const res = await fetch(SHEET_URL + params);
       return res.json();
     }
 
-    function updateSummary(last) {
-      document.getElementById('card-weight').textContent   = parseFloat(last['Peso corporal Kg']).toFixed(1);
-      document.getElementById('card-bmi').textContent      = parseFloat(last['BMI (Índice Masa Corporal)']).toFixed(1);
-      document.getElementById('card-fat').textContent      = parseFloat(last['% Grasa corporal']).toFixed(1);
-      document.getElementById('card-visceral').textContent = parseFloat(last['Nivel de grasa visceral']);
+    function createCards(data) {
+      const latest = data[data.length-1];
+      const keys = [
+        {k:'Peso corporal Kg',label:'Peso (Kg)'},
+        {k:'BMI (Índice Masa Corporal)',label:'BMI'},
+        {k:'% Grasa corporal',label:'% Grasa'},
+        {k:'Masa muscular Kg',label:'Masa Muscular'},
+        {k:'% Agua total del cuerpo',label:'% Agua'},
+        {k:'BMR (Tasa Metabólica Basal)',label:'BMR'},
+        {k:'Edad metabólica',label:'Edad Metabólica'},
+        {k:'Nivel de grasa visceral',label:'Grasa Visceral'}
+      ];
+      const container = document.getElementById('cardsContainer');
+      container.innerHTML = '';
+      keys.forEach(m => {
+        const first = parseFloat(data[0][m.k]), last = parseFloat(latest[m.k]);
+        const diff = (last - first).toFixed(1);
+        const pct = ((diff/first)*100).toFixed(1);
+        const trend = diff<0 ? 'down' : 'up';
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${m.label}</h3>
+          <p>${last.toFixed(1)}</p>
+          <div class="trend ${trend}">
+            ${trend==='up'? '↑':'↓'} ${Math.abs(pct)}%
+          </div>`;
+        container.appendChild(card);
+      });
     }
 
-    function renderChart(data) {
+    function renderChart(data, metric) {
       const ctx = document.getElementById('evolChart').getContext('2d');
-      const labels = data.map(r => new Date(r.Fecha).toLocaleDateString());
-      const weight = data.map(r => parseFloat(r['Peso corporal Kg']) || 0);
-      if (window.eChart) window.eChart.destroy();
+      const labels = data.map(r=>new Date(r.Fecha).toLocaleDateString());
+      const values = data.map(r=>parseFloat(r[metric])||0);
+      if(window.eChart) window.eChart.destroy();
       window.eChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Peso (Kg)',
-            data: weight,
-            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary'),
-            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary') + '33',
-            fill: true,
-            tension: 0.3,
-            pointRadius: 3
-          }]
-        },
-        options: { responsive: true }
+        type:'line',
+        data:{ labels, datasets:[{
+          label: metric, data:values,
+          borderColor:getComputedStyle(document.documentElement).getPropertyValue('--primary'),
+          backgroundColor:getComputedStyle(document.documentElement).getPropertyValue('--primary')+'33',
+          fill:true, tension:0.3, pointRadius:4
+        }]},
+        options:{
+          responsive:true,
+          plugins:{ tooltip:{ callbacks:{
+            label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}` 
+          }}},
+          scales:{ x:{ title:{ display:true, text:'Fecha' }}, y:{ title:{ display:true, text:metric } }}
+        }
       });
     }
 
     function renderComparison(data) {
-      const first = data[0], last = data[data.length - 1];
-      const metrics = [
-        { key:'Peso corporal Kg', label:'Peso (Kg)', classify: b => b < first['Peso corporal Kg'] ? 'Mejora' : 'Empeoró' },
-        { key:'BMI (Índice Masa Corporal)', label:'BMI', classify: b => b < first['BMI (Índice Masa Corporal)'] ? 'Mejora' : 'Empeoró' },
-        { key:'% Grasa corporal', label:'% Grasa', classify: b => b < first['% Grasa corporal'] ? 'Mejora' : 'Empeoró' },
-        { key:'Nivel de grasa visceral', label:'Visceral', classify: b => b < first['Nivel de grasa visceral'] ? 'Mejora' : 'Empeoró' }
+      const first = data[0], last = data[data.length-1];
+      const keys = [
+        {k:'Peso corporal Kg',label:'Peso (Kg)'},
+        {k:'BMI (Índice Masa Corporal)',label:'BMI'},
+        {k:'% Grasa corporal',label:'% Grasa'},
+        {k:'Masa muscular Kg',label:'Masa Muscular'},
+        {k:'% Agua total del cuerpo',label:'% Agua'},
+        {k:'BMR (Tasa Metabólica Basal)',label:'BMR'},
+        {k:'Edad metabólica',label:'Edad Metabólica'},
+        {k:'Nivel de grasa visceral',label:'Grasa Visceral'}
       ];
       const tbody = document.getElementById('comparisonBody');
       tbody.innerHTML = '';
-      metrics.forEach(m => {
-        const a = parseFloat(first[m.key]), b = parseFloat(last[m.key]);
-        const diff = (b - a).toFixed(1), sign = diff >= 0 ? '+' : '';
-        const status = m.classify(b);
+      keys.forEach(m=>{
+        const a=parseFloat(first[m.k]), b=parseFloat(last[m.k]);
+        const diff=(b-a).toFixed(1), sign=diff>=0?'+':'';
+        const status = diff<0 ? 'Mejora' : 'Empeoró';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${m.label}</td>
           <td>${a.toFixed(1)}</td>
           <td>${b.toFixed(1)}</td>
           <td>${sign}${diff}</td>
-          <td class="${status === 'Mejora' ? 'positive' : 'negative'}">${status}</td>`;
+          <td class="${status==='Mejora'?'positive':'negative'}">${status}</td>`;
         tbody.appendChild(tr);
       });
     }
 
-    async function applyClient(client) {
-      const params = client 
-        ? `?nombre=${encodeURIComponent(client.split('|')[0])}&apellido=${encodeURIComponent(client.split('|')[1])}` 
-        : '';
+    async function applyClient(c) {
+      const params = c? `?nombre=${encodeURIComponent(c.split('|')[0])}&apellido=${encodeURIComponent(c.split('|')[1])}`:'';
       const data = await fetchData(params);
-      if (!data.length) return;
-      allData = data;
-      updateSummary(data[data.length - 1]);
-      renderChart(data);
-      renderComparison(data);
+      rawData = data;
+      if(!rawData.length) return;
+      createCards(rawData);
+      renderChart(rawData, document.getElementById('chartMetricSelect').value);
+      renderComparison(rawData);
     }
 
     async function init() {
       const sel = document.getElementById('clienteSelect');
+      const metSel = document.getElementById('chartMetricSelect');
       const data = await fetchData();
-      const clients = [...new Set(data.map(r => `${r.Nombre}|${r.Apellidos}`))];
-      clients.forEach(c => {
+      const clients = [...new Set(data.map(r=>`${r.Nombre}|${r.Apellidos}`))];
+      clients.forEach(c=>{
         const [n,a] = c.split('|');
         const opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = `${n} ${a}`;
+        opt.value=c; opt.textContent=`${n} ${a}`;
         sel.appendChild(opt);
       });
-      sel.addEventListener('change', () => applyClient(sel.value));
-      applyClient(''); // load all
+      sel.addEventListener('change', ()=>applyClient(sel.value));
+      metSel.addEventListener('change', ()=>renderChart(rawData, metSel.value));
+      applyClient(''); 
     }
 
     init();
