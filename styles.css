@@ -34,6 +34,21 @@ h1 {
   font-weight: 600;
 }
 
+.filters {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.filters select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.95em;
+}
+
 .summary-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -109,7 +124,6 @@ th, td {
 th {
   background: var(--primary);
   color: #fff;
-  font-weight: 500;
 }
 
 tr:last-child td {
@@ -127,6 +141,9 @@ tr:last-child td {
 }
 
 @media (max-width: 600px) {
+  .filters {
+    flex-direction: column;
+  }
   .summary-cards {
     grid-template-columns: 1fr;
   }
