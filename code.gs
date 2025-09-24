@@ -1,43 +1,44 @@
 /**
- * Publica la hoja "Medidas" como JSON, filtrable por ?nombre= y ?apellido=.
- * Incluye limpieza de encabezados y parámetros.
- * Archivo: Code.gs
+ * Publica la hoja "Medidas" como JSON, con filtros de fecha y cliente.
  */
 function doGet(e) {
-  // Asegurar existencia de parámetros
-  const params = e && e.parameter ? e.parameter : {};
-  const nombreFiltro = params.nombre ? params.nombre.toString().trim() : '';
-  const apellidoFiltro = params.apellido ? params.apellido.toString().trim() : '';
+  const params = e.parameter || {};
+  const nombreFiltro = params.nombre ? params.nombre.trim() : '';
+  const apellidoFiltro = params.apellido ? params.apellido.trim() : '';
+  const fromDate = params.from || '';
+  const toDate = params.to || '';
 
-  // ID de la hoja y obtención de la pestaña "Medidas"
   const SHEET_ID = '1TcEJDs30jw-UsEUuuncrl2Q2QOBsd4BqeAWqUETvglM';
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Medidas');
-
-  // Leer todos los datos de la hoja
   const rows = sheet.getDataRange().getValues();
-
-  // Limpiar encabezados (trim) y extraerlos
   const headers = rows.shift().map(h => h.toString().trim());
 
-  // Mapear cada fila a un objeto con clave=encabezado
-  const records = rows.map(row => {
+  let records = rows.map(row => {
     const obj = {};
     headers.forEach((h, i) => obj[h] = row[i]);
     return obj;
   });
 
-  // Filtrar por nombre si se proporcionó
-  let filtered = records;
+  // Filtrar por nombre/apellidos
   if (nombreFiltro) {
-    filtered = filtered.filter(r => r['Nombre'].toString().trim() === nombreFiltro);
+    records = records.filter(r => r['Nombre'].toString().trim() === nombreFiltro);
   }
-  // Filtrar por apellido si se proporcionó
   if (apellidoFiltro) {
-    filtered = filtered.filter(r => r['Apellidos'].toString().trim() === apellidoFiltro);
+    records = records.filter(r => r['Apellidos'].toString().trim() === apellidoFiltro);
   }
 
-  // Devolver el JSON resultante
+  // Filtrar por rango de fechas ISO YYYY-MM-DD
+  if (fromDate) {
+    records = records.filter(r => new Date(r['Fecha']) >= new Date(fromDate));
+  }
+  if (toDate) {
+    records = records.filter(r => new Date(r['Fecha']) <= new Date(toDate));
+  }
+
+  // Ordenar por fecha ascendente
+  records.sort((a, b) => new Date(a['Fecha']) - new Date(b['Fecha']));
+
   return ContentService
-    .createTextOutput(JSON.stringify(filtered))
+    .createTextOutput(JSON.stringify(records))
     .setMimeType(ContentService.MimeType.JSON);
 }
