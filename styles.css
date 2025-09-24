@@ -5,6 +5,7 @@
   --blue-light: #d1ecf1;
   --blue: #17a2b8;
   --blue-dark: #117a8b;
+  --danger: #f5576c;
   --background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
 }
 
@@ -48,8 +49,7 @@ body {
   padding: 6px 12px;
   border: 2px solid var(--blue-light);
   background: #fff;
-  color: #333;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   transition: border 0.2s, background 0.2s;
 }
 
@@ -62,7 +62,7 @@ body {
 /* Contenedor principal */
 .container {
   max-width: 1250px;
-  margin: 100px auto 40px auto; /* Alejar para no solapar con selector */
+  margin: 100px auto 40px auto; /* Alejar para no solapar */
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.07);
@@ -109,7 +109,7 @@ body {
 .card {
   background: #fff;
   border-radius: 15px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05), 0 1px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.05), 0 1px 6px rgba(0,0,0,0.08);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -119,7 +119,7 @@ body {
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 44px rgba(0,0,0,0.15);
 }
 
 .card h3 {
@@ -135,6 +135,55 @@ body {
   width: 100%;
   min-height: 225px;
 }
+
+/* Informe resumen */
+.summary-report {
+  background: #f5f9f7;
+  border-top: 4px solid var(--green);
+  margin: 40px 20px 20px 20px;
+  padding: 30px 20px;
+  border-radius: 0 0 20px 20px;
+}
+
+.summary-report h2 {
+  text-align: center;
+  color: var(--green-dark);
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.summary-card h4 {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  color: var(--blue-dark);
+}
+
+.summary-card .value {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.summary-card .change {
+  font-size: 0.95em;
+}
+
+.positive { color: var(--green-dark); }
+.negative { color: var(--danger); }
 
 /* Responsive */
 @media (max-width: 900px) {
