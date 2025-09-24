@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Evolución Biomédica</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,32 +13,66 @@
       --danger: #f5576c;
       --background: linear-gradient(135deg,#e8f5e9 0%,#e3f2fd 100%);
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Poppins',sans-serif;background:var(--background);color:#333;min-height:100vh;}
-    .selector-container{position:fixed;top:20px;right:20px;background:var(--green-light);padding:12px 18px;border-radius:10px;box-shadow:0 6px 16px rgba(0,0,0,0.1);z-index:1001;}
-    .selector-container label{font-weight:600;margin-right:8px;color:var(--green-dark);}
-    .selector-container select{font-size:.95em;border-radius:6px;padding:6px 12px;border:2px solid var(--blue-light);background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.1);transition:border .2s,background .2s;}
-    .selector-container select:focus{border-color:var(--green);background:#f8fff9;outline:none;}
-    .container{max-width:1250px;margin:100px auto 40px;background:#fff;border-radius:20px;box-shadow:0 20px 48px rgba(0,0,0,0.07);overflow:hidden;padding-bottom:30px;animation:fadeIn 1s ease-out;}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
-    .header{background:var(--blue);color:#fff;padding:30px 25px 20px;display:flex;align-items:center;justify-content:center;gap:20px;}
-    .header img{height:70px;}
-    .header h1{font-size:2.2em;font-weight:700;letter-spacing:-1px;}
-    .header p{font-size:1.1em;opacity:.9;margin-top:4px;}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:36px;padding:40px;}
-    .card{background:#fff;border-radius:15px;box-shadow:0 6px 24px rgba(0,0,0,0.05),0 1px 6px rgba(0,0,0,0.08);padding:20px;display:flex;flex-direction:column;align-items:center;transition:transform .2s,box-shadow .2s;}
-    .card:hover{transform:translateY(-5px);box-shadow:0 12px 44px rgba(0,0,0,0.15);}
-    .card h3{font-size:1.2em;color:var(--green-dark);margin-bottom:18px;font-weight:700;letter-spacing:.5px;}
-    .chart-container{width:100%;min-height:225px;}
-    .summary-report{background:#f5f9f7;border-top:4px solid var(--green);margin:40px 20px 20px;padding:30px 20px;border-radius:0 0 20px 20px;}
-    .summary-report h2{text-align:center;color:var(--green-dark);margin-bottom:10px;font-size:1.8em;}
-    .summary-dates{text-align:center;margin-bottom:20px;color:var(--blue-dark);font-size:.95em;}
-    .summary-table{width:100%;border-collapse:collapse;margin-top:10px;}
-    .summary-table th,.summary-table td{border:1px solid #ddd;padding:8px;text-align:center;}
-    .summary-table th{background:var(--blue-light);color:#000;}
-    .positive{color:var(--green-dark);} .negative{color:var(--danger);}
-    @media(max-width:900px){.container{margin:120px 10px 20px;} .grid{padding:20px;gap:26px;}}
-    @media(max-width:600px){.selector-container{position:static;margin:10px auto;text-align:center;} .header{flex-direction:column;padding:20px 6vw 15px;} .header h1{font-size:1.8em;} .grid{display:block;padding:10px 2vw;} .card{margin-bottom:26px;}}
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Poppins',sans-serif; background:var(--background); color:#333; min-height:100vh; }
+    .selector-container {
+      position:fixed; top:20px; right:20px; background:var(--green-light);
+      padding:12px 18px; border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,0.1);
+      z-index:1001;
+    }
+    .selector-container label { font-weight:600; margin-right:8px; color:var(--green-dark); }
+    .selector-container select {
+      font-family:'Poppins',sans-serif; font-size:.95em; border-radius:6px;
+      padding:6px 12px; border:2px solid var(--blue-light); background:#fff;
+      box-shadow:0 1px 4px rgba(0,0,0,0.1); transition:border .2s,background .2s;
+    }
+    .selector-container select:focus { border-color:var(--green); background:#f8fff9; outline:none; }
+    .container {
+      max-width:1250px; margin:100px auto 40px; background:#fff; border-radius:20px;
+      box-shadow:0 20px 48px rgba(0,0,0,0.07); overflow:hidden; padding-bottom:30px;
+      animation:fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:none;} }
+    .header {
+      background:var(--blue); color:#fff; padding:30px 25px 20px;
+      display:flex; align-items:center; justify-content:center; gap:20px;
+    }
+    .header img { height:70px; width:auto; }
+    .header h1 { font-size:2.2em; font-weight:700; letter-spacing:-1px; }
+    .header p { font-size:1.1em; opacity:.9; margin-top:4px; }
+    .grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+      gap:36px; padding:40px;
+    }
+    .card {
+      background:#fff; border-radius:15px;
+      box-shadow:0 6px 24px rgba(0,0,0,0.05),0 1px 6px rgba(0,0,0,0.08);
+      padding:20px; display:flex; flex-direction:column; align-items:center;
+      transition:transform .2s,box-shadow .2s;
+    }
+    .card:hover { transform:translateY(-5px); box-shadow:0 12px 44px rgba(0,0,0,0.15); }
+    .card h3 { font-size:1.2em; color:var(--green-dark); margin-bottom:18px; font-weight:700; letter-spacing:.5px; }
+    .chart-container { width:100%; min-height:225px; }
+    .summary-report {
+      background:#f5f9f7; border-top:4px solid var(--green);
+      margin:40px 20px 20px; padding:30px 20px; border-radius:0 0 20px 20px;
+    }
+    .summary-report h2 { text-align:center; color:var(--green-dark); margin-bottom:10px; font-size:1.8em; }
+    .summary-dates { text-align:center; margin-bottom:20px; color:var(--blue-dark); font-size:.95em; }
+    .summary-table { width:100%; border-collapse:collapse; margin-top:10px; }
+    .summary-table th, .summary-table td {
+      border:1px solid #ddd; padding:8px; text-align:center;
+    }
+    .summary-table th { background:var(--blue-light); color:#000; }
+    .positive { color:var(--green-dark); }
+    .negative { color:var(--danger); }
+    @media(max-width:900px){ .container{margin:120px 10px 20px;} .grid{padding:20px;gap:26px;} }
+    @media(max-width:600px){
+      .selector-container{position:static;margin:10px auto;text-align:center;}
+      .header{flex-direction:column;padding:20px 6vw 15px;}
+      .header h1{font-size:1.8em;} .grid{display:block;padding:10px 2vw;}
+      .card{margin-bottom:26px;}
+    }
   </style>
 </head>
 <body>
@@ -58,20 +92,20 @@
     <div class="summary-report">
       <h2>📋 Resumen de Progreso</h2>
       <div class="summary-dates" id="summaryDates"></div>
-      <table class="summary-table" id="summaryTable">
+      <table class="summary-table">
         <thead>
           <tr>
-            <th>Métrica</th><th>Inicial</th><th>Final</th><th>Diferencia</th><th>Óptimo</th><th>Estado</th>
+            <th>Métrica</th><th>Inicial</th><th>Final</th>
+            <th>Diferencia</th><th>Óptimo</th><th>Estado</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="summaryTableBody"></tbody>
       </table>
     </div>
   </div>
-
   <script>
     const SHEET_URL='https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
-    let charts={},fechasGlobal=[];
+    let charts={}, fechasGlobal=[];
 
     function drawChart(id,data,color){
       const ctx=document.getElementById(id).getContext('2d');
@@ -83,7 +117,10 @@
         charts[id]=new Chart(ctx,{
           type:'line',
           data:{labels:fechasGlobal,datasets:[{data,borderColor:color,backgroundColor:color+'33',fill:true,tension:0.4,pointRadius:4}]},
-          options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:'#eee'}}},plugins:{legend:{display:false}}}
+          options:{responsive:true,maintainAspectRatio:false,
+            scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:'#eee'}}},
+            plugins:{legend:{display:false}}
+          }
         });
       }
     }
@@ -91,7 +128,7 @@
     function renderizarGraficos(datos){
       datos.sort((a,b)=>new Date(a.Fecha)-new Date(b.Fecha));
       fechasGlobal=datos.map(r=>new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
-      const m=k=>datos.map(r=>parseFloat(r[k])||0);
+      const getData=k=>datos.map(r=>parseFloat(r[k])||0);
       const metrics=[
         {key:'Peso corporal Kg',id:'pesoChart',color:'#28a745',label:'Peso (Kg)'},
         {key:'BMI (Índice Masa Corporal)',id:'bmiChart',color:'#17a2b8',label:'BMI'},
@@ -100,18 +137,20 @@
         {key:'Masa muscular Kg',id:'musculoChart',color:'#17a2b8',label:'Masa Muscular'},
         {key:'BMR (Tasa Metabólica Basal)',id:'bmrChart',color:'#28a745',label:'BMR'},
         {key:'Edad metabólica',id:'edadChart',color:'#17a2b8',label:'Edad Metabólica'},
-        {key:'Nivel de grasa visceral',id:'visceralChart',color:'#f5576c',label:'Grasa Visceral'}
+        {key:'Nivel de grasa visceral',id:'visceralChart',color:'#f5576c',label:'Grasa Visceral'},
+        {key:'Nuevo Campo',id:'nuevoCampoChart',color:'#FFA500',label:'Nuevo Campo'}
       ];
-      const grid=document.getElementById('chartsGrid');
-      grid.innerHTML=metrics.map(met=>`
-        <div class="card"><h3>${met.label}</h3><div class="chart-container"><canvas id="${met.id}"></canvas></div></div>
-      `).join('');
-      metrics.forEach(met=>drawChart(met.id,m(met.key),met.color));
+      document.getElementById('chartsGrid').innerHTML=metrics.map(m=>`
+        <div class="card">
+          <h3>${m.label}</h3>
+          <div class="chart-container"><canvas id="${m.id}"></canvas></div>
+        </div>`).join('');
+      metrics.forEach(m=>drawChart(m.id,getData(m.key),m.color));
     }
 
     function generarResumen(datos){
-      if(datos.length<2)return;
-      const first=datos[0],last=datos[datos.length-1];
+      if(datos.length<2) return;
+      const first=datos[0], last=datos[datos.length-1];
       document.getElementById('summaryDates').textContent=
         `Desde ${new Date(first.Fecha).toLocaleDateString()} hasta ${new Date(last.Fecha).toLocaleDateString()}`;
       const metrics=[
@@ -121,23 +160,24 @@
         {key:'Masa muscular Kg',label:'Masa Muscular',optimal:'Varía según edad y sexo',classify:()=>null},
         {key:'BMR (Tasa Metabólica Basal)',label:'BMR',optimal:'Depende de edad/s.',classify:()=>null},
         {key:'Edad metabólica',label:'Edad Metabólica',optimal:'<= Edad real',classify:()=>null},
-        {key:'Nivel de grasa visceral',label:'Grasa Visceral',optimal:'1–9 saludable',classify:v=>v<=9?'Saludable':v<=14?'Moderado':'Alto riesgo'}
+        {key:'Nivel de grasa visceral',label:'Grasa Visceral',optimal:'1–9 saludable',classify:v=>v<=9?'Saludable':v<=14?'Moderado':'Alto riesgo'},
+        {key:'Nuevo Campo',label:'Nuevo Campo',optimal:'Rango X–Y',classify:v=>v<X?'Bajo':v<=Y?'Óptimo':'Alto'}
       ];
-      const tbody=document.querySelector('#summaryTable tbody');
+      const tbody=document.getElementById('summaryTableBody');
       tbody.innerHTML='';
-      metrics.forEach(met=>{
-        const a=parseFloat(first[met.key]),b=parseFloat(last[met.key]);
-        if(isNaN(a)||isNaN(b))return;
-        const diff=(b-a).toFixed(1),sign=diff>=0?'+':'';
-        const status=met.classify(b)|| (diff==='0.0'?'Sin cambio':diff>0?'Subió':'Bajó');
+      metrics.forEach(m=>{
+        const a=parseFloat(first[m.key]), b=parseFloat(last[m.key]);
+        if(isNaN(a)||isNaN(b)) return;
+        const diff=(b-a).toFixed(1), sign=diff>=0?'+':'';
+        const status=m.classify(b) || (diff==='0.0'?'Sin cambio':diff>0?'Subió':'Bajó');
         const tr=document.createElement('tr');
         tr.innerHTML=`
-          <td>${met.label}</td>
+          <td>${m.label}</td>
           <td>${a}</td>
           <td>${b}</td>
           <td>${sign}${diff}</td>
-          <td>${met.optimal}</td>
-          <td class="${['Normal','Saludable'].includes(status)?'positive':'negative'}">${status}</td>
+          <td>${m.optimal}</td>
+          <td class="${['Normal','Saludable','Óptimo'].includes(status)?'positive':'negative'}">${status}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -150,11 +190,14 @@
       sel.innerHTML='<option value="">—Selecciona cliente—</option>';
       names.forEach(n=>sel.appendChild(Object.assign(document.createElement('option'),{value:n,textContent:n})));
       sel.addEventListener('change',()=>{
-        const [nom,...ap]=sel.value.split(' '),apellido=ap.join(' ');
-        const url=sel.value?`${SHEET_URL}?nombre=${encodeURIComponent(nom)}&apellido=${encodeURIComponent(apellido)}`:SHEET_URL;
-        fetch(url).then(r=>r.json()).then(d=>{renderizarGraficos(d);generarResumen(d);});
+        const [nom,...ap]=sel.value.split(' '), apellido=ap.join(' ');
+        const url=sel.value
+          ?`${SHEET_URL}?nombre=${encodeURIComponent(nom)}&apellido=${encodeURIComponent(apellido)}`
+          :SHEET_URL;
+        fetch(url).then(r=>r.json()).then(d=>{renderizarGraficos(d); generarResumen(d);});
       });
-      renderizarGraficos(data); generarResumen(data);
+      renderizarGraficos(data);
+      generarResumen(data);
     }
     init();
   </script>
