@@ -18,7 +18,12 @@
       --background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Poppins',sans-serif; background:var(--background); color:#333; min-height:100vh; }
+    body {
+      font-family:'Poppins',sans-serif;
+      background: var(--background);
+      color: #333;
+      min-height:100vh;
+    }
     .selector-container {
       position:fixed; top:20px; right:20px;
       background:var(--green-light); padding:12px 18px;
@@ -35,14 +40,17 @@
     }
     .selector-container select:focus { border-color:var(--green); background:#f8fff9; outline:none; }
     .container {
-      max-width:1250px; margin:100px auto 40px; background:#fff;
-      border-radius:20px; box-shadow:0 20px 48px rgba(0,0,0,0.07);
-      overflow:hidden; padding-bottom:30px; animation:fadeIn 1s ease-out;
+      max-width:1250px; margin:100px auto 40px;
+      background:#fff; border-radius:20px;
+      box-shadow:0 20px 48px rgba(0,0,0,0.07);
+      overflow:hidden; padding-bottom:30px;
+      animation:fadeIn 1s ease-out;
     }
     @keyframes fadeIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:none;} }
     .header {
-      background:var(--blue); color:white; padding:30px 25px 20px;
-      display:flex; align-items:center; justify-content:center; gap:20px;
+      background:var(--blue); color:white;
+      padding:30px 25px 20px; display:flex;
+      align-items:center; justify-content:center; gap:20px;
     }
     .header img { height:70px; width:auto; }
     .header h1 { font-size:2.2em; font-weight:700; letter-spacing:-1px; }
@@ -70,12 +78,13 @@
       display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px;
     }
     .summary-card {
-      background:white; border-radius:12px; padding:15px;
-      box-shadow:0 4px 16px rgba(0,0,0,0.05); text-align:center;
+      background:white; border-radius:12px; padding:15px; box-shadow:0 4px 16px rgba(0,0,0,0.05); text-align:center;
     }
     .summary-card h4 { font-size:1.1em; margin-bottom:10px; color:var(--blue-dark); }
-    .summary-card .value { font-size:1.5em; font-weight:700; margin-bottom:6px; }
-    .summary-card .change { font-size:0.95em; }
+    .summary-card .value { font-size:1.2em; font-weight:700; }
+    .summary-card .opt { font-size:0.8em; color:#666; margin-left:4px; }
+    .summary-card .change { font-size:0.95em; margin-top:6px; }
+    .summary-card .diff { font-size:0.9em; color:#444; margin-top:4px; }
     .positive { color:var(--green-dark); } .negative { color:var(--danger); }
     @media(max-width:900px){ .container{margin:120px 10px 20px;} .grid{padding:20px;gap:26px;} }
     @media(max-width:600px){
@@ -91,7 +100,7 @@
 <body>
   <div class="selector-container">
     <label for="clienteSelect">Cliente:</label>
-    <select id="clienteSelect"><option>—Cargando—</option></select>
+    <select id="clienteSelect"><option value="">—Cargando—</option></select>
   </div>
   <div class="container">
     <div class="header">
@@ -110,77 +119,73 @@
   </div>
   <script>
     const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
-    let charts = {}, fechasGlobal = [];
+    let charts={}, fechasGlobal=[];
 
     function drawChart(id,data,color){
-      const ctx = document.getElementById(id).getContext('2d');
-      if(charts[id]) {
-        charts[id].data.labels = fechasGlobal;
-        charts[id].data.datasets[0].data = data;
+      const ctx=document.getElementById(id).getContext('2d');
+      if(charts[id]){
+        charts[id].data.labels=fechasGlobal;
+        charts[id].data.datasets[0].data=data;
         charts[id].update();
       } else {
-        charts[id] = new Chart(ctx, {
+        charts[id]=new Chart(ctx,{
           type:'line',
-          data:{ labels:fechasGlobal, datasets:[{ data, borderColor:color, backgroundColor:color+'33', fill:true, tension:0.4, pointRadius:4 }]},
-          options:{ responsive:true, maintainAspectRatio:false,
-            scales:{ x:{ grid:{ display:false } }, y:{ beginAtZero:false, grid:{ color:'#eee' } } },
-            plugins:{ legend:{ display:false } }
-          }
+          data:{labels:fechasGlobal,datasets:[{data,borderColor:color,backgroundColor:color+'33',fill:true,tension:0.4,pointRadius:4}]},
+          options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{beginAtZero:false,grid:{color:'#eee'}}},plugins:{legend:{display:false}}}
         });
       }
     }
 
     function renderizarGraficos(datos){
       datos.sort((a,b)=>new Date(a.Fecha)-new Date(b.Fecha));
-      fechasGlobal = datos.map(r=>new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
-      const m = key=>datos.map(r=>parseFloat(r[key])||0);
+      fechasGlobal=datos.map(r=>new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
+      const m=key=>datos.map(r=>parseFloat(r[key])||0);
       const metrics=[
-        { key:'Peso corporal Kg', id:'pesoChart', color:'#28a745', label:'Peso (Kg)' },
-        { key:'BMI (Índice Masa Corporal)', id:'bmiChart', color:'#17a2b8', label:'BMI' },
-        { key:'% Grasa corporal', id:'grasaChart', color:'#f5576c', label:'% Grasa' },
-        { key:'% Agua total del cuerpo', id:'aguaChart', color:'#28a745', label:'% Agua' },
-        { key:'Masa muscular Kg', id:'musculoChart', color:'#17a2b8', label:'Masa Muscular' },
-        { key:'BMR (Tasa Metabólica Basal)', id:'bmrChart', color:'#28a745', label:'BMR' },
-        { key:'Edad metabólica', id:'edadChart', color:'#17a2b8', label:'Edad Metabólica' },
-        { key:'Nivel de grasa visceral', id:'visceralChart', color:'#f5576c', label:'Grasa Visceral' }
+        {key:'Peso corporal Kg',id:'pesoChart',color:'#28a745',label:'Peso (Kg)'},
+        {key:'BMI (Índice Masa Corporal)',id:'bmiChart',color:'#17a2b8',label:'BMI'},
+        {key:'% Grasa corporal',id:'grasaChart',color:'#f5576c',label:'% Grasa'},
+        {key:'% Agua total del cuerpo',id:'aguaChart',color:'#28a745',label:'% Agua'},
+        {key:'Masa muscular Kg',id:'musculoChart',color:'#17a2b8',label:'Masa Muscular'},
+        {key:'BMR (Tasa Metabólica Basal)',id:'bmrChart',color:'#28a745',label:'BMR'},
+        {key:'Edad metabólica',id:'edadChart',color:'#17a2b8',label:'Edad Metabólica'},
+        {key:'Nivel de grasa visceral',id:'visceralChart',color:'#f5576c',label:'Grasa Visceral'}
       ];
-      const grid = document.getElementById('chartsGrid');
-      grid.innerHTML = metrics.map(met=>`
+      document.getElementById('chartsGrid').innerHTML=metrics.map(met=>`
         <div class="card">
           <h3>${met.label}</h3>
           <div class="chart-container"><canvas id="${met.id}"></canvas></div>
-        </div>
-      `).join('');
-      metrics.forEach(met=> drawChart(met.id, m(met.key), met.color) );
+        </div>`).join('');
+      metrics.forEach(met=>drawChart(met.id,m(met.key),met.color));
     }
 
     function generarResumen(datos){
       if(datos.length<2) return;
-      const first = datos[0], last = datos[datos.length-1];
-      document.getElementById('summaryDates').textContent =
+      const first=datos[0], last=datos[datos.length-1];
+      document.getElementById('summaryDates').textContent=
         `De ${new Date(first.Fecha).toLocaleDateString()} a ${new Date(last.Fecha).toLocaleDateString()}`;
       const metrics=[
-        {key:'Peso corporal Kg',label:'Peso (Kg)'},
-        {key:'BMI (Índice Masa Corporal)',label:'BMI'},
-        {key:'% Grasa corporal',label:'% Grasa'},
-        {key:'Masa muscular Kg',label:'Masa Muscular'},
-        {key:'BMR (Tasa Metabólica Basal)',label:'BMR'},
-        {key:'Edad metabólica',label:'Edad Metabólica'},
-        {key:'Nivel de grasa visceral',label:'Grasa Visceral'}
+        {key:'Peso corporal Kg',label:'Peso (Kg)',optimal:'IMC normal',classify:()=>null},
+        {key:'BMI (Índice Masa Corporal)',label:'BMI',optimal:'18.5–24.9',classify:v=>v<18.5?'Bajo peso':v<25?'Normal':v<30?'Sobrepeso':'Obesidad'},
+        {key:'% Grasa corporal',label:'% Grasa',optimal:'Hombres:10–20%, Mujeres:18–28%',classify:v=>v<10?'Bajo':v<=20?'Saludable':v<=28?'Saludable':'Alto'},
+        {key:'Masa muscular Kg',label:'Masa Muscular',optimal:'Varía según edad y sexo',classify:()=>null},
+        {key:'BMR (Tasa Metabólica Basal)',label:'BMR (kcal)',optimal:'Depende de edad/s.',classify:()=>null},
+        {key:'Edad metabólica',label:'Edad Metabólica',optimal:'<= Edad real',classify:()=>null},
+        {key:'Nivel de grasa visceral',label:'Grasa Visceral',optimal:'1–9 saludable',classify:v=>v<=9?'Saludable':v<=14?'Moderado':'Alto riesgo'}
       ];
-      const container = document.getElementById('summaryCards');
-      container.innerHTML = '';
+      const container=document.getElementById('summaryCards');
+      container.innerHTML='';
       metrics.forEach(met=>{
-        const a = parseFloat(first[met.key]), b = parseFloat(last[met.key]);
+        const a=parseFloat(first[met.key]), b=parseFloat(last[met.key]);
         if(isNaN(a)||isNaN(b)) return;
-        const diff = (b - a).toFixed(1), sign = diff >=0 ? '+' : '';
-        const improved = ['% Grasa','Peso','Visceral'].some(t=>met.label.includes(t)) ? diff<0 : diff>0;
-        const card = document.createElement('div');
+        const diff=(b-a).toFixed(1), sign=diff>=0?'+':'';
+        const status=met.classify(b) || (diff==='0.0'?'Sin cambio':diff>0?'Subió':'Bajó');
+        const card=document.createElement('div');
         card.className='summary-card';
         card.innerHTML=`
           <h4>${met.label}</h4>
-          <div class="value">${sign}${diff}</div>
-          <div class="change ${improved?'positive':'negative'}">${improved?'Mejora':'Empeoró'}</div>
+          <div class="value">Último: ${b}<span class="opt">(${met.optimal})</span></div>
+          <div class="change ${['Normal','Saludable','Saludable'].includes(status)?'positive':'negative'}">${status}</div>
+          <div class="diff">${sign}${diff}</div>
         `;
         container.appendChild(card);
       });
@@ -188,29 +193,30 @@
     }
 
     function evaluarMetabolismo(last){
-      const bio = [];
-      const bmi = parseFloat(last['BMI (Índice Masa Corporal)']);
-      let bmiCat = bmi<18.5?'Bajo peso': bmi<25?'Normal': bmi<30?'Sobrepeso':'Obesidad';
+      const bio=[];
+      const bmi=parseFloat(last['BMI (Índice Masa Corporal)']);
+      let bmiCat=bmi<18.5?'Bajo peso':bmi<25?'Normal':bmi<30?'Sobrepeso':'Obesidad';
       bio.push({label:`BMI: ${bmi.toFixed(1)}`,status:bmiCat});
-      const fat = parseFloat(last['% Grasa corporal']);
-      let fatStatus = fat<12?'Bajo': fat<=25?'Saludable':'Alto';
+      const fat=parseFloat(last['% Grasa corporal']);
+      let fatStatus=fat<12?'Bajo':fat<=25?'Saludable':'Alto';
       bio.push({label:`Grasa corporal: ${fat.toFixed(1)}%`,status:fatStatus});
-      const vis = parseFloat(last['Nivel de grasa visceral']);
-      let visStatus = vis<=9?'Saludable': vis<=14?'Moderado':'Alto';
+      const vis=parseFloat(last['Nivel de grasa visceral']);
+      let visStatus=vis<=9?'Saludable':vis<=14?'Moderado':'Alto';
       bio.push({label:`Grasa visceral: ${vis}`,status:visStatus});
       return bio;
     }
 
     function renderMetabolicReport(datos){
-      const last = datos[datos.length-1];
-      const bio = evaluarMetabolismo(last);
-      const container = document.getElementById('summaryCards');
-      const title = document.createElement('h3');
+      const last=datos[datos.length-1];
+      const bio=evaluarMetabolismo(last);
+      const container=document.getElementById('summaryCards');
+      const title=document.createElement('h3');
       title.textContent='🧪 Evaluación Metabólica';
       title.style.gridColumn='1/-1'; title.style.textAlign='center'; title.style.margin='20px 0 10px';
       container.prepend(title);
       bio.forEach(item=>{
-        const card = document.createElement('div'); card.className='summary-card';
+        const card=document.createElement('div');
+        card.className='summary-card';
         card.innerHTML=`
           <h4>${item.label}</h4>
           <div class="change ${['Normal','Saludable'].includes(item.status)?'positive':'negative'}">${item.status}</div>
@@ -220,20 +226,15 @@
     }
 
     async function init(){
-      const allData = await fetch(SHEET_URL).then(r=>r.json());
-      const sel = document.getElementById('clienteSelect');
-      const names = [...new Set(allData.map(r=>(r.Nombre+' '+r.Apellidos).trim()))];
+      const allData=await fetch(SHEET_URL).then(r=>r.json());
+      const sel=document.getElementById('clienteSelect');
+      const names=[...new Set(allData.map(r=>(r.Nombre+' '+r.Apellidos).trim()))];
       sel.innerHTML='<option value="">—Selecciona cliente—</option>';
-      names.forEach(n=>{
-        const o=document.createElement('option'); o.value=n; o.textContent=n;
-        sel.appendChild(o);
-      });
+      names.forEach(n=>sel.appendChild(Object.assign(document.createElement('option'),{value:n,textContent:n})));
       sel.addEventListener('change',()=>{
-        const [nom,...ap] = sel.value.split(' '), apellido = ap.join(' ');
-        const url = sel.value
-          ? `${SHEET_URL}?nombre=${encodeURIComponent(nom)}&apellido=${encodeURIComponent(apellido)}`
-          : SHEET_URL;
-        fetch(url).then(r=>r.json()).then(data=>{ renderizarGraficos(data); generarResumen(data); });
+        const [nom,...ap]=sel.value.split(' '), apellido=ap.join(' ');
+        const url=sel.value?`${SHEET_URL}?nombre=${encodeURIComponent(nom)}&apellido=${encodeURIComponent(apellido)}`:SHEET_URL;
+        fetch(url).then(r=>r.json()).then(data=>{renderizarGraficos(data); generarResumen(data);});
       });
       renderizarGraficos(allData);
       generarResumen(allData);
