@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Evolución Biomédica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body{font-family:'Poppins',sans-serif;background:#f4f6f8;margin:0;padding:0;}
+    .container{max-width:1200px;margin:20px auto;background:white;border-radius:8px;overflow:hidden;}
+    .header{background:#ff6b35;color:white;padding:20px;text-align:center;}
+    .selector{padding:15px;text-align:center;}
+    .selector select{padding:8px;font-size:1em;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;padding:20px;}
+    .card{background:white;border:1px solid #ddd;border-radius:6px;padding:15px;}
+    .card h3{margin:0 0 10px;font-size:1.1em;}
+    .chart-container{position:relative;height:250px;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header"><h1>📊 Evolución Biomédica</h1></div>
+    <div class="selector">
+      <label for="clienteSelect">Selecciona cliente:</label>
+      <select id="clienteSelect"><option>—Cargando—</option></select>
+    </div>
+    <div class="grid">
+      <div class="card"><h3>Peso (Kg)</h3><div class="chart-container"><canvas id="pesoChart"></canvas></div></div>
+      <div class="card"><h3>BMI</h3><div class="chart-container"><canvas id="bmiChart"></canvas></div></div>
+      <div class="card"><h3>% Grasa corporal</h3><div class="chart-container"><canvas id="grasaChart"></canvas></div></div>
+      <div class="card"><h3>% Agua total</h3><div class="chart-container"><canvas id="aguaChart"></canvas></div></div>
+      <div class="card"><h3>Masa muscular (Kg)</h3><div class="chart-container"><canvas id="musculoChart"></canvas></div></div>
+      <div class="card"><h3>BMR (kcal)</h3><div class="chart-container"><canvas id="bmrChart"></canvas></div></div>
+      <div class="card"><h3>Edad metabólica</h3><div class="chart-container"><canvas id="edadMetabolicaChart"></canvas></div></div>
+      <div class="card"><h3>Grasa visceral</h3><div class="chart-container"><canvas id="grasaVisceralChart"></canvas></div></div>
+    </div>
+  </div>
+
+  <script>
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw4p-6JUt9kx5K5qbFSWffaX9FtEQ0tK_ptRrYTSlZzIr-MxlAZPEIr0MK22fvDboGrUw/exec';
+    let charts = {}, fechasGlobal = [];
+
+    function drawChart(id, data, color) {
+      const ctx = document.getElementById(id).getContext('2d');
+      if (charts[id]) {
+        charts[id].data.labels = fechasGlobal;
+        charts[id].data.datasets[0].data = data;
+        charts[id].update();
+      } else {
+        charts[id] = new Chart(ctx, {
+          type: 'line',
+          data: { labels: fechasGlobal, datasets: [{ data, borderColor: color, backgroundColor: color + '33', fill: true, tension: 0.4, pointRadius: 4 }] },
+          options: { responsive: true, maintainAspectRatio: false,
+            scales: { x: { grid: { display: false } }, y: { beginAtZero: false, grid: { color: '#eee' } } },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+    }
+
+    function renderizarGraficos(datos) {
+      datos.sort((a, b) => new Date(a.Fecha) - new Date(b.Fecha));
+      fechasGlobal = datos.map(r => new Date(r.Fecha).toLocaleDateString('es-ES',{month:'short',day:'numeric'}));
+      const m = f => datos.map(r => parseFloat(r[f]) || 0);
+      drawChart('pesoChart', m('Peso corporal Kg'), '#ff6b35');
+      drawChart('bmiChart', m('BMI (Índice Masa Corporal)'), '#667eea');
+      drawChart('grasaChart', m('% Grasa corporal'), '#f5576c');
+      drawChart('aguaChart', m('% Agua total del cuerpo'), '#4facfe');
+      drawChart('musculoChart', m('Masa muscular Kg'), '#4ade80');
+      drawChart('bmrChart', m('BMR (Tasa Metabólica Basal)'), '#764ba2');
+      drawChart('edadMetabolicaChart', m('Edad metabólica'), '#f093fb');
+      drawChart('grasaVisceralChart', m('Nivel de grasa visceral'), '#ff8e53');
+    }
+
+    async function init() {
+      const allData = await fetch(SHEET_URL).then(r => r.json());
+      const nombres = [...new Set(allData.map(r => r.Nombre))];
+      const sel = document.getElementById('clienteSelect');
+      sel.innerHTML = '<option value="">—Selecciona cliente—</option>';
+      nombres.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o); });
+      sel.addEventListener('change', () => {
+        const url = sel.value ? `${SHEET_URL}?nombre=${encodeURIComponent(sel.value)}` : SHEET_URL;
+        fetch(url).then(r => r.json()).then(renderizarGraficos);
+      });
+      renderizarGraficos(allData);
+    }
+
+    init();
+  </script>
+</body>
+</html>
