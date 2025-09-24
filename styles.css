@@ -32,7 +32,7 @@ body {
   background: var(--green-light);
   padding: 12px 18px;
   border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
   z-index: 1001;
 }
 
@@ -62,16 +62,15 @@ body {
 /* Contenedor principal */
 .container {
   max-width: 1250px;
-  margin: 100px auto 40px auto; /* Alejar para no solapar */
+  margin: 100px auto 40px auto;
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.07);
   overflow: hidden;
   padding-bottom: 30px;
   animation: fadeIn 1s ease-out;
 }
 
-/* Animación de aparición */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: none; }
@@ -81,20 +80,28 @@ body {
 .header {
   background: var(--blue);
   color: white;
-  padding: 50px 25px 30px 25px;
-  text-align: center;
+  padding: 30px 25px 20px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.header img {
+  height: 70px;
+  width: auto;
 }
 
 .header h1 {
-  font-size: 2.5em;
+  font-size: 2.2em;
   font-weight: 700;
-  margin-bottom: 8px;
   letter-spacing: -1px;
 }
 
 .header p {
-  font-size: 1.2em;
+  font-size: 1.1em;
   opacity: 0.9;
+  margin-top: 4px;
 }
 
 /* Grid de tarjetas */
@@ -130,7 +137,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Contenedor de gráfico */
 .chart-container {
   width: 100%;
   min-height: 225px;
@@ -148,8 +154,15 @@ body {
 .summary-report h2 {
   text-align: center;
   color: var(--green-dark);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 1.8em;
+}
+
+.summary-dates {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--blue-dark);
+  font-size: 0.95em;
 }
 
 .summary-cards {
@@ -173,17 +186,34 @@ body {
 }
 
 .summary-card .value {
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: 700;
-  margin-bottom: 6px;
+}
+
+.summary-card .opt {
+  font-size: 0.8em;
+  color: #666;
+  margin-left: 4px;
 }
 
 .summary-card .change {
   font-size: 0.95em;
+  margin-top: 6px;
 }
 
-.positive { color: var(--green-dark); }
-.negative { color: var(--danger); }
+.summary-card .diff {
+  font-size: 0.9em;
+  color: #444;
+  margin-top: 4px;
+}
+
+.positive {
+  color: var(--green-dark);
+}
+
+.negative {
+  color: var(--danger);
+}
 
 /* Responsive */
 @media (max-width: 900px) {
@@ -203,7 +233,8 @@ body {
     text-align: center;
   }
   .header {
-    padding: 30px 6vw 20px 6vw;
+    flex-direction: column;
+    padding: 20px 6vw 15px 6vw;
   }
   .header h1 {
     font-size: 1.8em;
